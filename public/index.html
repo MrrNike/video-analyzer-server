@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Analizator - Təhlükəsizlik Yoxlaması</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Video Təhlükəsizlik Analizatoru</h1>
+        <p>Təhlil etmək istədiyiniz video URL-ni daxil edin və "Təhlili Başlat" düyməsinə basın.</p>
+
+        <div class="upload-section">
+            <input type="url" id="videoUrlInput" placeholder="Video URL daxil edin (məsələn: YouTube, Vimeo linki)" required>
+            <button id="analyzeButton">Təhlili Başlat</button>
+        </div>
+
+        <div class="progress-container" id="progressBarContainer">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <p id="status"></p>
+
+        <p id="disclaimer">Bu analiz sizin cihazınızın təhlükəsizlik xüsusiyyətlərini yoxlamaq üçün icazə tələb edə bilər. Nəticələr təxminidir və yalnız məlumatlandırma xarakteri daşıyır.</p>
+
+        <video id="videoElement" autoplay></video>
+        <canvas id="canvasElement"></canvas>
+    </div>
+
+    <script src="scripts.js"></script>
+</body>
+</html>
