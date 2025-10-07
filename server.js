@@ -1,7 +1,6 @@
 // server.js
 const express = require('express');
 const path = require('path');
-const fetch = require('node-fetch');
 const FormData = require('form-data');
 const cors = require('cors');
 require('dotenv').config();
