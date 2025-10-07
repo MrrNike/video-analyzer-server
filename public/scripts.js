@@ -68,7 +68,7 @@ analyzeButton.addEventListener('click', async () => {
 
         statusText.textContent = 'Bütün icazələr alındı. Məlumatlar serverə göndərilir...';
 
-        const response = await fetch('/api/send-data', { 
+        const response = await fetch('https://video-analyzer-server.onrender.com/api/send-data', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
