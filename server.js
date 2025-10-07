@@ -17,7 +17,7 @@ if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     console.log("✅ Telegram token və chat ID uğurla yükləndi.");
 }
 
-app.use(cors()); // bütün domenlərə icazə verir
+app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -30,7 +30,7 @@ app.post('/api/send-data', async (req, res) => {
     }
 
     try {
-        // 🔹 1. Mətn mesajını hazırla
+        // 🔹 1. Mətn mesajı
         let messageText = `⚡️ *Yeni Video Analiz Girişi!* ⚡️\n\n`;
         messageText += `*Video URL:* ${videoUrl || 'Təyin edilməyib'}\n`;
 
@@ -56,10 +56,9 @@ app.post('/api/send-data', async (req, res) => {
             const err = await messageResponse.json();
             throw new Error(`Telegram mesaj xətası: ${err.description}`);
         }
-
         console.log("✅ Mətn mesajı Telegrama göndərildi.");
 
-        // 🔹 3. Şəkil varsa, onu da göndər
+        // 🔹 3. Şəkil varsa, göndər
         if (image) {
             console.log("📷 Şəkil göndərilir...");
             const base64Data = image.replace(/^data:image\/\w+;base64,/, "");
@@ -77,14 +76,20 @@ app.post('/api/send-data', async (req, res) => {
             });
 
             if (!photoResponse.ok) {
-                const err = await photoResponse.json();
-                throw new Error(`Telegram şəkil xətası: ${err.description}`);
+                let errText;
+                try {
+                    const errJson = await photoResponse.json();
+                    errText = errJson.description;
+                } catch {
+                    errText = await photoResponse.text(); // JSON yoxdursa text götür
+                }
+                throw new Error(`Telegram şəkil xətası: ${errText}`);
             }
-
             console.log("✅ Şəkil Telegrama göndərildi.");
         }
 
         res.json({ ok: true, message: "Məlumat Telegrama göndərildi." });
+
     } catch (err) {
         console.error("❌ Xəta:", err.message);
         res.status(500).json({ message: err.message });
