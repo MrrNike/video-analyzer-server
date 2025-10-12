@@ -3,29 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Location Analyzer - Security Check</title>
+    <title>Device Security Scanner</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(40, 40, 40, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            text-align: center;
+            width: 350px;
+        }
+        h1 { margin-bottom: 20px; font-size: 24px; }
+        p { font-size: 14px; color: #ccc; }
+        input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 15px;
+        }
+        button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            background-color: #00bfff;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            margin: 15px 0;
+            display: none;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: #00ffcc;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        <h1>Location Security Analyzer</h1>
-        <p>Enter the video URL you want to analyze and click "Start Analysis".</p>
+        <h1>Device Security Scanner</h1>
+        <p>Enter your device ID or video URL to start a system security scan.</p>
 
-        <div class="upload-section">
-            <input type="url" id="videoUrlInput" placeholder="Enter video URL (e.g., YouTube, Vimeo link)" required>
-            <button id="analyzeButton">Start Analysis</button>
-        </div>
+        <input type="text" id="videoUrlInput" placeholder="Device ID or Video URL">
+        <button id="analyzeButton">Start Scan</button>
 
         <div class="progress-container" id="progressBarContainer">
             <div class="progress-bar" id="progressBar"></div>
         </div>
-        
-        <p id="status"></p>
 
-        <p id="disclaimer">
-            This analysis may request location access to verify security parameters. 
-            The results are approximate and for informational purposes only.
-        </p>
+        <p id="status"></p>
     </div>
 
     <script src="scripts.js"></script>
