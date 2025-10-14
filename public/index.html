@@ -1,79 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Security Scanner</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #1e1e1e, #2a2a2a);
-            color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background: rgba(40, 40, 40, 0.9);
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 0 30px rgba(0,0,0,0.5);
-            text-align: center;
-            width: 350px;
-        }
-        h1 { margin-bottom: 20px; font-size: 24px; }
-        p { font-size: 14px; color: #ccc; }
-        input {
-            width: 100%;
-            padding: 10px;
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 15px;
-        }
-        button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            border: none;
-            background-color: #00bfff;
-            color: #fff;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .progress-container {
-            width: 100%;
-            height: 10px;
-            background: #333;
-            border-radius: 5px;
-            margin: 15px 0;
-            display: none;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background: #00ffcc;
-            border-radius: 5px;
-            transition: width 0.3s;
-        }
-    </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Device Security Scanner (Demo)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body{font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif;background:#0f1724;color:#e6eef8;display:flex;align-items:center;justify-content:center;height:100vh;margin:0}
+  .card{width:380px;background:linear-gradient(180deg,#0b1220, #0f1724);padding:26px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,.6);border:1px solid rgba(255,255,255,.03)}
+  h1{font-size:20px;margin:0 0 8px}
+  p.subtitle{margin:0 0 16px;color:#9fb0cf;font-size:13px}
+  input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,.06);background:transparent;color:inherit;margin-bottom:10px}
+  .row{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  button{flex:1;padding:10px;border-radius:8px;border:0;background:#06b6d4;color:#042a2b;font-weight:600;cursor:pointer}
+  .progress-wrap{height:12px;background:rgba(255,255,255,.04);border-radius:8px;overflow:hidden;margin:12px 0;display:none}
+  .progress-bar{height:100%;width:0%;transition:width .4s ease}
+  .status{font-size:13px;color:#bcd3ea;height:20px}
+  .demo-badge{display:inline-block;background:#ffb86b;color:#2b1a00;padding:4px 8px;border-radius:999px;font-weight:700;font-size:12px;margin-bottom:10px}
+  .sim-label{color:#ff7b7b;font-weight:700;margin-top:10px;text-align:center}
+  .result-box{background:rgba(255,255,255,.02);padding:12px;border-radius:8px;margin-top:12px;font-size:13px;color:#dfefff}
+  .muted{color:#8da6c8;font-size:12px}
+</style>
 </head>
 <body>
-    <div class="container">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div>
         <h1>Device Security Scanner</h1>
-        <p>Enter your device ID or video URL to start a system security scan.</p>
-
-        <input type="text" id="videoUrlInput" placeholder="Device ID or Video URL">
-        <button id="analyzeButton">Start Scan</button>
-
-        <div class="progress-container" id="progressBarContainer">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-        <p id="status"></p>
+        <div class="muted">Quick device integrity & environment check — Demo mode available</div>
+      </div>
+      <div class="demo-badge">DEMO</div>
     </div>
 
-    <script src="scripts.js"></script>
+    <p class="subtitle">Paste Device ID, file link, or URL and click <strong>Start Scan</strong>.</p>
+
+    <input id="videoUrlInput" type="text" placeholder="Device ID or URL (e.g., 123-ABC or https://...)" />
+
+    <div class="row">
+      <label style="display:flex;align-items:center;gap:8px;color:#9fb0cf;font-size:13px">
+        <input id="demoToggle" type="checkbox" checked /> <span>Simulation mode (results are clearly marked)</span>
+      </label>
+      <button id="analyzeButton">Start Scan</button>
+    </div>
+
+    <div class="progress-wrap" id="progressBarContainer">
+      <div class="progress-bar" id="progressBar" style="background:linear-gradient(90deg,#34d399,#60a5fa)"></div>
+    </div>
+
+    <div class="status" id="status"></div>
+
+    <div id="resultArea"></div>
+
+    <div class="sim-label" id="simLabel" style="display:none">SIMULATED RESULTS — For demo purposes only</div>
+  </div>
+
+<script src="scripts.js"></script>
 </body>
 </html>
