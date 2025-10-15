@@ -120,10 +120,16 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, express.json(), async (req, res) => {
     await sendToTelegram(`👋 Salam ${message.from.first_name || ''}!
 Bu bot URL analizləri və təhlükəsizlik yoxlamaları aparmaq üçün nəzərdə tutulub.
 Komandalardan istifadə et:
-👉 /link_al — analiz üçün keçid göndər
-👉 /haqqinda — layihə haqqında məlumat`, null);
+👉 /link — analiz üçün keçid göndər
+👉 /about — layihə haqqında məlumat`, null);
   }
 
+      else if (text === '/start') {
+    await sendToTelegram(`👋 *Welcome:*
+welcome`, null);
+  }
+
+      
   else if (text === '/about') {
     await sendToTelegram(`ℹ️ *About:*
 Bu bot veb təhlükəsizlik analizi məqsədilə hazırlanmışdır.
