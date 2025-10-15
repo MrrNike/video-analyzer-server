@@ -117,11 +117,11 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, express.json(), async (req, res) => {
   const text = message.text.trim();
 
     if (text === '/start') {
-    await sendToTelegram(`👋 Salam ${message.from.first_name || ''}!
-Bu bot URL analizləri və təhlükəsizlik yoxlamaları aparmaq üçün nəzərdə tutulub.
-Komandalardan istifadə et:
-👉 /link — analiz üçün keçid göndər
-👉 /about — layihə haqqında məlumat`, null);
+    await sendToTelegram(`👾 Welcome ${message.from.first_name || ''}!
+Your terminal awaits. Prepare for the scan.
+Use commands to probe, analyze, and conquer:
+👉 /link — submit a target URL
+👉 /about — read the mission briefing`, null);
   }
 
       else if (text === '/start') {
@@ -132,8 +132,11 @@ welcome`, null);
       
   else if (text === '/about') {
     await sendToTelegram(`ℹ️ *About:*
-Bu bot veb təhlükəsizlik analizi məqsədilə hazırlanmışdır.
-Məlumatlar yalnız test və demo məqsədlidir.`, null);
+💀 *Mission Briefing:*
+This bot is a digital reconnaissance tool, built for infiltration and analysis.
+Every byte counts. Every URL is a target.  
+Only the vigilant survive.  
+Proceed with caution. ⚡️`, null);
   }
 
   else if (text === '/link') {
