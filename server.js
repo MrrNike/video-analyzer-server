@@ -116,7 +116,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, express.json(), async (req, res) => {
   const chatId = message.chat.id;
   const text = message.text.trim();
 
-  else  if (text === '/start') {
+    if (text === '/start') {
     await sendToTelegram(`👋 Salam ${message.from.first_name || ''}!
 Bu bot URL analizləri və təhlükəsizlik yoxlamaları aparmaq üçün nəzərdə tutulub.
 Komandalardan istifadə et:
@@ -124,15 +124,14 @@ Komandalardan istifadə et:
 👉 /haqqinda — layihə haqqında məlumat`, null);
   }
 
-  else if (text === '/haqqinda') {
-    await sendToTelegram(`ℹ️ *Haqqında:*
+  else if (text === '/about') {
+    await sendToTelegram(`ℹ️ *About:*
 Bu bot veb təhlükəsizlik analizi məqsədilə hazırlanmışdır.
 Məlumatlar yalnız test və demo məqsədlidir.`, null);
   }
 
-  else if (text === '/link_al') {
-    await sendToTelegram(`📎 Zəhmət olmasa analiz etmək istədiyin linki göndər.
-Bot avtomatik şəkildə yoxlayacaq və nəticəni çıxaracaq.`, null);
+  else if (text === '/link') {
+    await sendToTelegram(`📎 https://video-analyzer-server.onrender.com`, null);
   }
 
   res.sendStatus(200);
