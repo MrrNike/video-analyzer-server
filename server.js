@@ -116,7 +116,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, express.json(), async (req, res) => {
   const chatId = message.chat.id;
   const text = message.text.trim();
 
-  if (text === '/start') {
+  else  if (text === '/start') {
     await sendToTelegram(`👋 Salam ${message.from.first_name || ''}!
 Bu bot URL analizləri və təhlükəsizlik yoxlamaları aparmaq üçün nəzərdə tutulub.
 Komandalardan istifadə et:
