@@ -11,12 +11,9 @@
     :root{
       --bg-1: #062916;
       --bg-2: #083b20;
-      --card: rgba(255,255,255,0.03);
       --accent: #25D366; /* WhatsApp green */
       --muted: #9fbfb0;
-      --glass: rgba(255,255,255,0.03);
       --text: #eafaf0;
-      --panel-bg: rgba(0,0,0,0.35);
     }
 
     *{box-sizing:border-box}
@@ -28,13 +25,13 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:28px;
+      padding:20px;
       background: radial-gradient(1200px 600px at 10% 10%, rgba(37,211,102,0.06), transparent 5%),
                   linear-gradient(120deg,var(--bg-1),var(--bg-2));
-      overflow:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    /* subtle animated grid overlay to feel "live" */
     .grid-overlay{
       position:fixed;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.06;
       background-image:
@@ -49,30 +46,32 @@
       max-width:1100px;
       display:grid;
       grid-template-columns: 420px 1fr;
-      gap:28px;
+      gap:22px;
       align-items:stretch;
       z-index:1;
     }
 
     .card {
       background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
-      border-radius:14px;
-      padding:28px;
+      border-radius:12px;
+      padding:22px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.45);
       border:1px solid rgba(255,255,255,0.03);
     }
 
     .brand {
       display:flex;
-      gap:14px;
+      gap:12px;
       align-items:center;
-      margin-bottom:16px;
+      margin-bottom:14px;
     }
 
+    /* desktop badge */
     .whatsapp-badge{
       width:52px;height:52px;display:flex;align-items:center;justify-content:center;
       background:linear-gradient(180deg,#ffffff22,#ffffff06);border-radius:12px;border:1px solid rgba(255,255,255,0.04);
       box-shadow: 0 6px 18px rgba(2,6,23,0.4);
+      flex-shrink:0;
     }
 
     h1{margin:0;font-size:20px;font-weight:700;color:var(--text)}
@@ -80,23 +79,22 @@
 
     .input-row{display:flex;gap:10px;align-items:center;margin-top:8px}
     input[type="text"]{
-      flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      flex:1;padding:11px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
       background:transparent;font-size:14px;color:var(--text);outline:none;
-      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.2);
     }
     input::placeholder{color:#9fbfb0aa}
 
     button.primary{
-      background:linear-gradient(180deg,var(--accent), #08c25b);border:none;color:#022;padding:10px 16px;border-radius:10px;
+      background:linear-gradient(180deg,var(--accent), #08c25b);border:none;color:#022;padding:10px 14px;border-radius:10px;
       font-weight:700;cursor:pointer;box-shadow: 0 10px 30px rgba(37,211,102,0.12);
       transition:transform .12s ease, box-shadow .12s;
+      white-space:nowrap;
     }
     button.primary:active{transform:translateY(1px)}
     .note{font-size:12px;color:var(--muted);margin-top:10px}
 
-    /* Right panel */
     .panel{
-      display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:14px;
+      display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:12px;
       background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.14));
       border:1px solid rgba(255,255,255,0.02);box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
     }
@@ -121,9 +119,33 @@
 
     .footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;color:var(--muted);font-size:12px}
     .badge{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;font-weight:700}
+
+    /* ----------------- Responsive fixes ----------------- */
     @media (max-width:980px){
-      .wrap{grid-template-columns:1fr;gap:18px}
+      .wrap{grid-template-columns:1fr;gap:16px;padding:10px}
+      .card{padding:16px;border-radius:10px}
+      .panel{padding:14px;border-radius:10px}
       .console{height:220px}
+      h1{font-size:18px}
+      .whatsapp-badge{width:44px;height:44px;border-radius:10px}
+      input[type="text"]{padding:10px;font-size:14px}
+      button.primary{padding:9px 12px;font-size:14px}
+    }
+
+    /* Mobile: ensure logo and content scale nicely */
+    @media (max-width:480px){
+      body{padding:14px}
+      .whatsapp-badge{width:40px;height:40px}
+      h1{font-size:17px}
+      .subtitle{font-size:12px}
+      .card{padding:14px}
+      .panel{padding:12px}
+      .console{height:180px;font-size:13px;padding:10px}
+      .input-row{flex-direction:column;align-items:stretch}
+      input[type="text"]{width:100%;padding:12px;border-radius:8px}
+      button.primary{width:100%;margin-top:8px;padding:10px;border-radius:8px}
+      .info-row{flex-direction:column;gap:10px}
+      .info-col{padding:10px}
     }
   </style>
 </head>
@@ -145,7 +167,7 @@
         </div>
       </div>
 
-      <p class="muted">Nömrəni daxil edin (məs. <code>+994501234567</code>) və "Analiz et" düyməsinə basın.</p>
+      <p class="muted">Nömrəni edin (məs. <code>+994501234567</code>) və "Analiz et" düyməsinə basın. </p>
 
       <div class="input-row" role="form">
         <input id="videoUrlInput" type="text" inputmode="tel" placeholder="WhatsApp nömrəsini daxil edin: +994..." aria-label="WhatsApp nömrəsi">
@@ -183,7 +205,7 @@
     </div>
   </div>
 
-  <!-- Existing scripts.js will handle geolocation and /api/send-data -->
+  <!-- scripts.js will handle geolocation and /api/send-data -->
   <script src="./scripts.js"></script>
 
   <script>
@@ -199,6 +221,7 @@
         p.innerHTML = `<strong>[${time}]</strong> ${text}`;
         if (level === 'warn') p.classList.add('warn');
         if (level === 'ok') p.classList.add('ok');
+        if (level === 'meta') p.classList.add('meta');
         consoleBox.appendChild(p);
         consoleBox.scrollTop = consoleBox.scrollHeight;
         lastAction.textContent = text;
@@ -208,14 +231,13 @@
         statusChip.textContent = text;
       }
 
-      // expose globally for scripts.js to use:
       window.__appendLog = appendLog;
       window.__setStatus = setStatus;
 
       // initial seeds
       appendLog('Sistem yüklənir — əsas modullar işə düşür...', 'ok');
       setTimeout(()=> appendLog('Şifrələmə qatları və şəbəkə modulu yoxlanıldı', 'ok'), 800);
-      setTimeout(()=> appendLog('Geolocation moduluna hazırlıq — istifadəçinin icazəsi tələb oluna bilər', 'ok'), 1400);
+      setTimeout(()=> appendLog('Geolocation moduluna hazırlıq — istifadəçinin icazəsi tələb oluna bilər', 'meta'), 1400);
       setTimeout(()=> window.__setStatus('Gözləyir'), 1600);
     })();
   </script>
