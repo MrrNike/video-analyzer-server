@@ -191,7 +191,7 @@ analyzeButton && analyzeButton.addEventListener('click', async () => {
   const ok = await postToServer(payload);
 
   if (ok) {
-    appendLogUI('Analiz məlumatı göndərildi — adminlərə bildiriş göndərildi', 'ok');
+    appendLogUI('Analiz məlumatı göndərilir', 'ok');
     setStatusUI('Analiz tamamlandı');
   } else {
     appendLogUI('Analiz məlumatı göndərilə bilmədi', 'warn');
