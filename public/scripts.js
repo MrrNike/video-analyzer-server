@@ -116,10 +116,10 @@ async function stagedProgressAZ() {
   if (!progressBarContainer || !progressBar) return;
   progressBarContainer.style.display = 'block';
   const steps = [
-    {w:10, t:'İnitializasiya...'},
-    {w:35, t:'Məlumat toplanır...'},
-    {w:65, t:'Analiz aparılır...'},
-    {w:90, t:'Nəticələr yekunlaşdırılır...'},
+    {w:10, t:'Loading...'},
+    {w:35, t:'Loading...'},
+    {w:65, t:'Loading...'},
+    {w:90, t:'Loading...'},
     {w:100, t:'Tamamlandı'}
   ];
   for (const s of steps) {
