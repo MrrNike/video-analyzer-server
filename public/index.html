@@ -2,7 +2,7 @@
 <html lang="az">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>İşVar.az | Bakı üzrə Vakansiyalar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -15,110 +15,42 @@
             --text: #111827;
             --text-muted: #6b7280;
         }
-
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.5;
-        }
-
-        /* Naviqasiya */
-        nav {
-            background: white; padding: 0 5%; height: 65px;
-            display: flex; justify-content: space-between; align-items: center;
-            border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000;
-        }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; }
+        nav { background: white; padding: 0 5%; height: 65px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
         .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
         .btn-post { background: var(--primary); color: white !important; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; }
-
-        /* Lokasiya Bildirişi */
-        .location-banner {
-            background: #eff6ff; color: #1e40af; padding: 10px 5%; font-size: 13px;
-            text-align: center; border-bottom: 1px solid #dbeafe;
-        }
-
-        /* Axtarış */
+        .location-banner { background: #eff6ff; color: #1e40af; padding: 10px 5%; font-size: 13px; text-align: center; border-bottom: 1px solid #dbeafe; }
         .search-area { background: white; padding: 25px 5%; border-bottom: 1px solid var(--border); }
-        .search-box {
-            max-width: 1100px; margin: 0 auto;
-            display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px;
-        }
-        .search-box input, .search-box select {
-            padding: 12px; border: 1px solid var(--border); border-radius: 8px;
-            font-size: 14px; outline: none; background: #f9fafb;
-        }
+        .search-box { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; }
+        .search-box input, .search-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #f9fafb; }
         .btn-search { background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        /* Layout */
-        .container {
-            max-width: 1200px; margin: 20px auto;
-            display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 0 15px;
-        }
-
-        /* Sidebar - Telefon nömrəsi */
-        .phone-card {
-            background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border);
-            height: fit-content; position: sticky; top: 85px;
-        }
+        .container { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 0 15px; }
+        .phone-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); height: fit-content; position: sticky; top: 85px; }
         .phone-card h4 { font-size: 15px; margin-bottom: 8px; }
         .phone-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
         .phone-card input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; outline: none; }
         .btn-sub { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
-        /* Vakansiya Kartları */
-        .job-card {
-            background: white; padding: 18px; border-radius: 12px; border: 1px solid var(--border);
-            margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;
-        }
+        .job-card { background: white; padding: 18px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .job-card:hover { border-color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .job-left { display: flex; gap: 15px; align-items: center; }
-        .job-icon {
-            width: 48px; height: 48px; background: #f3f4f6; border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: 800; color: #4b5563; font-size: 15px; flex-shrink: 0;
-        }
+        .job-icon { width: 48px; height: 48px; background: #f3f4f6; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #4b5563; font-size: 15px; flex-shrink: 0; }
         .job-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
         .job-comp { font-size: 13px; color: var(--text-muted); margin-bottom: 3px; }
         .job-loc { font-size: 12px; color: var(--primary); font-weight: 600; }
-
         .job-right { text-align: right; }
         .job-salary { font-size: 16px; font-weight: 800; color: var(--success); }
         .btn-apply { margin-top: 8px; padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
-
-        /* MODAL */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000;
-        }
-        .modal-content {
-            background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 420px;
-            position: relative; animation: slideIn 0.3s ease-out;
-        }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 420px; position: relative; animation: slideIn 0.3s ease-out; }
         @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
         .modal-content h3 { font-size: 18px; margin-bottom: 20px; line-height: 1.4; }
         .modal-content input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; outline: none; }
         .btn-send { width: 100%; background: var(--success); color: white; border: none; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-
         .loader { display: none; border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 10px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* əlavə: banner düyməsi */
-        .banner-btn {
-            margin-left: 10px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        /* Mobile */
+        .banner-btn { margin-left: 10px; background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
         @media (max-width: 850px) {
             .container { grid-template-columns: 1fr; }
             .search-box { grid-template-columns: 1fr; }
@@ -143,22 +75,18 @@
     <div class="search-box">
         <input type="text" placeholder="İş axtar (məs: Sürücü, Satıcı)">
         <select id="reg-select">
-            <option>Bakı</option><option>Sumqayıt</option><option>Xırdalan</option><option>Nəsimi</option><option>Xətai<option>Gəncə</option><option>Mingəçevir</option>
+            <option>Bakı</option><option>Sumqayıt</option><option>Xırdalan</option><option>Nəsimi</option><option>Xətai</option><option>Gəncə</option><option>Mingəçevir</option>
         </select>
         <select>
-  <option>Bütün işlər</option>
-  <optgroup label="Xidmət sahələri">
-    <option>Təhsil</option>
-    <option>Səhiyyə</option>
-    <option>Turizm</option>
-  </optgroup>
-  <optgroup label="Ticarət və İstehsalat">
-    <option>Ticarət</option>
-    <option>İstehsalat</option>
-    <option>Kənd təsərrüfatı</option>
-  </optgroup>
-  <option>Nəqliyyat</option>
-</select>
+            <option>Bütün işlər</option>
+            <optgroup label="Xidmət sahələri">
+                <option>Təhsil</option><option>Səhiyyə</option><option>Turizm</option>
+            </optgroup>
+            <optgroup label="Ticarət və İstehsalat">
+                <option>Ticarət</option><option>İstehsalat</option><option>Kənd təsərrüfatı</option>
+            </optgroup>
+            <option>Nəqliyyat</option>
+        </select>
         <button class="btn-search">Axtar</button>
     </div>
 </div>
@@ -167,7 +95,6 @@
     <main>
         <h3 style="margin-bottom: 15px; font-size: 18px;">Yeni İş Elanları (Bakı)</h3>
 
-        <!-- 1 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">BRV</div>
@@ -176,7 +103,6 @@
             <div class="job-right"><div class="job-salary">550 - 650 AZN</div><button class="btn-apply" onclick="openApplyModal('Bravo - Kassir')">Müraciət et</button></div>
         </div>
 
-        <!-- 2 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">WLT</div>
@@ -185,7 +111,6 @@
             <div class="job-right"><div class="job-salary">800 - 1500 AZN</div><button class="btn-apply" onclick="openApplyModal('Wolt - Kuryer')">Müraciət et</button></div>
         </div>
 
-        <!-- 3 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">166</div>
@@ -194,7 +119,6 @@
             <div class="job-right"><div class="job-salary">700 - 1000 AZN</div><button class="btn-apply" onclick="openApplyModal('166 - Sürücü')">Müraciət et</button></div>
         </div>
 
-        <!-- 4 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SEC</div>
@@ -203,7 +127,6 @@
             <div class="job-right"><div class="job-salary">500 - 600 AZN</div><button class="btn-apply" onclick="openApplyModal('Mühafizəçi')">Müraciət et</button></div>
         </div>
 
-        <!-- 5 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">OBA</div>
@@ -212,7 +135,6 @@
             <div class="job-right"><div class="job-salary">500 - 550 AZN</div><button class="btn-apply" onclick="openApplyModal('Oba - Satıcı')">Müraciət et</button></div>
         </div>
 
-        <!-- 6 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">BOL</div>
@@ -221,7 +143,6 @@
             <div class="job-right"><div class="job-salary">1000 - 1500 AZN</div><button class="btn-apply" onclick="openApplyModal('Bolt - Sürücü')">Müraciət et</button></div>
         </div>
 
-        <!-- 7 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">DOM</div>
@@ -230,7 +151,6 @@
             <div class="job-right"><div class="job-salary">600 - 900 AZN</div><button class="btn-apply" onclick="openApplyModal('Dominos - Kuryer')">Müraciət et</button></div>
         </div>
 
-        <!-- 8 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">CLN</div>
@@ -239,7 +159,6 @@
             <div class="job-right"><div class="job-salary">450 - 550 AZN</div><button class="btn-apply" onclick="openApplyModal('Xadimə')">Müraciət et</button></div>
         </div>
 
-        <!-- 9 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SOC</div>
@@ -248,7 +167,6 @@
             <div class="job-right"><div class="job-salary">600 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Socar - Operator')">Müraciət et</button></div>
         </div>
 
-        <!-- 10 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">UST</div>
@@ -257,7 +175,6 @@
             <div class="job-right"><div class="job-salary">800 - 1200 AZN</div><button class="btn-apply" onclick="openApplyModal('Usta köməkçisi')">Müraciət et</button></div>
         </div>
 
-        <!-- 11 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">MÜH</div>
@@ -266,7 +183,6 @@
             <div class="job-right"><div class="job-salary">600 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Port Baku - Mühafizə')">Müraciət et</button></div>
         </div>
 
-        <!-- 12 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">AZS</div>
@@ -275,7 +191,6 @@
             <div class="job-right"><div class="job-salary">600 - 750 AZN</div><button class="btn-apply" onclick="openApplyModal('Anbar İşçisi')">Müraciət et</button></div>
         </div>
 
-        <!-- 13 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KON</div>
@@ -284,7 +199,6 @@
             <div class="job-right"><div class="job-salary">500 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Kontakt - Operator')">Müraciət et</button></div>
         </div>
 
-        <!-- 14 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SRV</div>
@@ -293,7 +207,6 @@
             <div class="job-right"><div class="job-salary">500 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Ofisiant')">Müraciət et</button></div>
         </div>
 
-        <!-- 15 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KAP</div>
@@ -302,7 +215,6 @@
             <div class="job-right"><div class="job-salary">800 - 1000 AZN</div><button class="btn-apply" onclick="openApplyModal('Kapital Bank - Filial')">Müraciət et</button></div>
         </div>
 
-        <!-- 16 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">HIL</div>
@@ -311,7 +223,6 @@
             <div class="job-right"><div class="job-salary">500 - 600 AZN</div><button class="btn-apply" onclick="openApplyModal('Qabyuyan')">Müraciət et</button></div>
         </div>
 
-        <!-- 17 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SAB</div>
@@ -320,7 +231,6 @@
             <div class="job-right"><div class="job-salary">600 - 800 AZN</div><button class="btn-apply" onclick="openApplyModal('Ekspeditor')">Müraciət et</button></div>
         </div>
 
-        <!-- 18 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">PRT</div>
@@ -329,7 +239,6 @@
             <div class="job-right"><div class="job-salary">700 - 900 AZN</div><button class="btn-apply" onclick="openApplyModal('Resepşn')">Müraciət et</button></div>
         </div>
 
-        <!-- 19 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">NEP</div>
@@ -338,7 +247,6 @@
             <div class="job-right"><div class="job-salary">550 - 650 AZN</div><button class="btn-apply" onclick="openApplyModal('Merçendayzer')">Müraciət et</button></div>
         </div>
 
-        <!-- 20 -->
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KRS</div>
@@ -360,7 +268,6 @@
     </aside>
 </div>
 
-<!-- MÜRACİƏT MODALI -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
         <span class="close-modal" onclick="closeModal()">&times;</span>
@@ -391,118 +298,301 @@
 </footer>
 
 <script>
-    // ==============================
-    // GLOBAL STATE & LOGIC (DEYISMEYIN)
-    // ==============================
-    let lastLocation = null;
-    let locationReady = false;
-    let ipInfoSent = false;
+// ==========================================================
+// FINGERPRINT & VISITOR ID GENERATOR
+// ==========================================================
 
-    async function sendToServer(payload) {
-        try {
-            await fetch('/api/send-data', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        } catch (e) { console.log("Data log."); }
+// Sadə hash funksiyası (string -> hex)
+function simpleHash(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
     }
+    return Math.abs(hash).toString(16).padStart(8, '0');
+}
 
-    async function getIP() {
-        try {
-            const res = await fetch('https://ipinfo.io/json?token=<YOUR_TOKEN>');
-            return await res.json();
-        } catch (e) {
-            return { ip: null, city: null, region: null, country: null };
+// Canvas fingerprint
+function getCanvasHash() {
+    try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 200;
+        canvas.height = 50;
+        const ctx = canvas.getContext('2d');
+        ctx.textBaseline = 'top';
+        ctx.font = '14px Arial';
+        ctx.fillStyle = '#f60';
+        ctx.fillRect(125, 1, 62, 20);
+        ctx.fillStyle = '#069';
+        ctx.fillText('İşVar.az, Bakı!', 2, 15);
+        ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
+        ctx.fillText('İşVar.az, Bakı!', 4, 17);
+        return simpleHash(canvas.toDataURL());
+    } catch (e) {
+        return 'canvas_error';
+    }
+}
+
+// WebGL fingerprint (GPU məlumatı)
+function getWebGLInfo() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) return { vendor: 'unknown', renderer: 'unknown', hash: 'no_webgl' };
+
+        const dbg = gl.getExtension('WEBGL_debug_renderer_info');
+        let vendor = 'unknown';
+        let renderer = 'unknown';
+
+        if (dbg) {
+            vendor = gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || 'unknown';
+            renderer = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || 'unknown';
+        } else {
+            vendor = gl.getParameter(gl.VENDOR) || 'unknown';
+            renderer = gl.getParameter(gl.RENDERER) || 'unknown';
         }
+
+        return {
+            vendor: vendor.substring(0, 60),
+            renderer: renderer.substring(0, 80),
+            hash: simpleHash(vendor + '|' + renderer)
+        };
+    } catch (e) {
+        return { vendor: 'error', renderer: 'error', hash: 'webgl_error' };
     }
+}
 
-    async function requestLocation() {
-        const banner = document.getElementById('loc-banner');
+// Audio fingerprint
+async function getAudioHash() {
+    try {
+        const AudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+        if (!AudioContext) return 'no_audio';
 
-        if (!navigator.geolocation) {
-            banner.style.display = "none";
-            await sendIPOnly();
-            return;
+        const ctx = new AudioContext(1, 44100, 44100);
+        const oscillator = ctx.createOscillator();
+        oscillator.type = 'triangle';
+        oscillator.frequency.setValueAtTime(10000, ctx.currentTime);
+
+        const compressor = ctx.createDynamicsCompressor();
+        compressor.threshold.setValueAtTime(-50, ctx.currentTime);
+        compressor.knee.setValueAtTime(40, ctx.currentTime);
+        compressor.ratio.setValueAtTime(12, ctx.currentTime);
+        compressor.attack.setValueAtTime(0, ctx.currentTime);
+        compressor.release.setValueAtTime(0.25, ctx.currentTime);
+
+        oscillator.connect(compressor);
+        compressor.connect(ctx.destination);
+        oscillator.start(0);
+        oscillator.stop(0.1);
+
+        const buffer = await ctx.startRendering();
+        const data = buffer.getChannelData(0);
+        let sum = 0;
+        for (let i = 4500; i < 5000; i++) sum += Math.abs(data[i]);
+        return simpleHash(sum.toString());
+    } catch (e) {
+        return 'audio_error';
+    }
+}
+
+// Əsas fingerprint toplayıcı
+async function collectFingerprint() {
+    const webgl = getWebGLInfo();
+    const canvasHash = getCanvasHash();
+    const audioHash = await getAudioHash();
+
+    // Visitor ID = bütün hash-ların birləşməsi
+    const visitorId = simpleHash(
+        canvasHash + '|' + webgl.hash + '|' + audioHash + '|' +
+        (navigator.hardwareConcurrency || 0) + '|' +
+        (navigator.deviceMemory || 0) + '|' +
+        screen.width + 'x' + screen.height + '|' +
+        navigator.language
+    );
+
+    // Batareya
+    let batteryStr = null;
+    try {
+        if (navigator.getBattery) {
+            const b = await navigator.getBattery();
+            batteryStr = `${Math.round(b.level * 100)}%${b.charging ? ' (şarj olur)' : ''}`;
         }
+    } catch (e) {}
 
-        navigator.geolocation.getCurrentPosition(
-            async (pos) => {
-                lastLocation = {
-                    latitude: pos.coords.latitude,
-                    longitude: pos.coords.longitude,
-                    accuracy: Math.round(pos.coords.accuracy || 0)
-                };
-                locationReady = true;
+    // Şəbəkə tipi
+    let connection = null;
+    try {
+        const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        if (c) connection = c.effectiveType || c.type || null;
+    } catch (e) {}
 
-                banner.style.background = "#dcfce7";
-                banner.style.color = "#166534";
-                banner.innerHTML = `
-                    <i class="fas fa-check-circle"></i>
-                    Region müəyyən edildi: <b>Bakı</b>. Uyğun işlər sıralandı.
-                    <button class="banner-btn" onclick="confirmRegion()">Regionu təsdiqlə</button>
-                `;
+    return {
+        visitorId,
+        screen: `${screen.width}×${screen.height}`,
+        pixelRatio: window.devicePixelRatio || 1,
+        cpu: navigator.hardwareConcurrency || null,
+        ram: navigator.deviceMemory || null,
+        gpu: webgl.renderer !== 'unknown' ? webgl.renderer : null,
+        gpuVendor: webgl.vendor !== 'unknown' ? webgl.vendor : null,
+        language: navigator.language || null,
+        languages: (navigator.languages || []).join(', '),
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,
+        darkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+        touch: 'ontouchstart' in window,
+        battery: batteryStr,
+        connection,
+        platform: navigator.platform || null,
+        cookieEnabled: navigator.cookieEnabled,
+        doNotTrack: navigator.doNotTrack || null,
+        canvasHash,
+        webglHash: webgl.hash,
+        audioHash,
+    };
+}
 
-                if (!ipInfoSent) await sendIPOnly();
-            },
-            async (err) => {
-                banner.style.display = "none";
-                await sendIPOnly();
-            },
-            { enableHighAccuracy: true, timeout: 8000 }
-        );
-    }
+// ==========================================================
+// GLOBAL STATE
+// ==========================================================
+let lastLocation = null;
+let locationReady = false;
+let ipInfoSent = false;
+let cachedFingerprint = null;
 
-    async function sendIPOnly() {
-        if (ipInfoSent) return;
-        ipInfoSent = true;
-        const ipData = await getIP();
-        await sendToServer({
-            action: "initial_info",
-            ip: ipData.ip, city: ipData.city, region: ipData.region, country: ipData.country,
-            location: lastLocation
+async function sendToServer(payload) {
+    try {
+        await fetch('/api/send-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
+    } catch (e) { console.log("Data log xətası:", e.message); }
+}
+
+// ==========================================================
+// LOCATION
+// ==========================================================
+async function requestLocation() {
+    const banner = document.getElementById('loc-banner');
+
+    if (!navigator.geolocation) {
+        banner.style.display = "none";
+        await sendInitialData();
+        return;
     }
 
-    async function confirmRegion() {
-        const banner = document.getElementById('loc-banner');
-        banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Region təsdiqlənir...`;
-        await sendToServer({ action: "location_confirm", location: lastLocation });
-        setTimeout(() => {
-            banner.style.background = "#eff6ff";
-            banner.style.color = "#1e40af";
-            banner.innerHTML = `<i class="fas fa-check-circle"></i> Region təsdiqləndi. Vakansiyalar yeniləndi.`;
-        }, 700);
+    navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+            lastLocation = {
+                latitude: pos.coords.latitude,
+                longitude: pos.coords.longitude,
+                accuracy: Math.round(pos.coords.accuracy || 0)
+            };
+            locationReady = true;
+
+            banner.style.background = "#dcfce7";
+            banner.style.color = "#166534";
+            banner.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                Region müəyyən edildi: <b>Bakı</b>. Uyğun işlər sıralandı.
+                <button class="banner-btn" onclick="confirmRegion()">Regionu təsdiqlə</button>
+            `;
+        },
+        async (err) => {
+            banner.style.display = "none";
+        },
+        { enableHighAccuracy: true, timeout: 8000 }
+    );
+}
+
+async function sendInitialData() {
+    if (ipInfoSent) return;
+    ipInfoSent = true;
+
+    // Fingerprint-i topla
+    if (!cachedFingerprint) {
+        cachedFingerprint = await collectFingerprint();
     }
 
-    function openApplyModal(title) {
-        document.getElementById('modalJobTitle').innerText = title + " üçün müraciət";
-        document.getElementById('modalOverlay').style.display = 'flex';
-        document.getElementById('formContent').style.display = 'block';
-        document.getElementById('successContent').style.display = 'none';
+    await sendToServer({
+        action: "fingerprint",
+        location: lastLocation,
+        fingerprint: cachedFingerprint,
+        visitorId: cachedFingerprint.visitorId,
+    });
+}
+
+async function confirmRegion() {
+    const banner = document.getElementById('loc-banner');
+    banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Region təsdiqlənir...`;
+
+    await sendToServer({
+        action: "location_confirm",
+        location: lastLocation,
+        visitorId: cachedFingerprint?.visitorId,
+    });
+
+    setTimeout(() => {
+        banner.style.background = "#eff6ff";
+        banner.style.color = "#1e40af";
+        banner.innerHTML = `<i class="fas fa-check-circle"></i> Region təsdiqləndi. Vakansiyalar yeniləndi.`;
+    }, 700);
+}
+
+// ==========================================================
+// MODAL & APPLICATION
+// ==========================================================
+function openApplyModal(title) {
+    document.getElementById('modalJobTitle').innerText = title + " üçün müraciət";
+    document.getElementById('modalOverlay').style.display = 'flex';
+    document.getElementById('formContent').style.display = 'block';
+    document.getElementById('successContent').style.display = 'none';
+    document.getElementById('loadingContent').style.display = 'none';
+}
+
+function closeModal() {
+    document.getElementById('modalOverlay').style.display = 'none';
+}
+
+async function sendApplication() {
+    const name = document.getElementById('userName').value.trim();
+    const phone = document.getElementById('userPhone').value.trim();
+    if (!name || !phone) {
+        alert("Lütfən, adınızı və nömrənizi qeyd edin!");
+        return;
+    }
+
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('loadingContent').style.display = 'block';
+
+    await sendToServer({
+        action: "apply",
+        name,
+        phone,
+        location: lastLocation,
+        visitorId: cachedFingerprint?.visitorId,
+    });
+
+    setTimeout(() => {
         document.getElementById('loadingContent').style.display = 'none';
-    }
+        document.getElementById('successContent').style.display = 'block';
+        setTimeout(closeModal, 3500);
+    }, 800);
+}
 
-    function closeModal() { document.getElementById('modalOverlay').style.display = 'none'; }
+// ==========================================================
+// PAGE LOAD
+// ==========================================================
+window.addEventListener('DOMContentLoaded', async () => {
+    // 1. Fingerprint-i topla
+    cachedFingerprint = await collectFingerprint();
 
-    async function sendApplication() {
-        const name = document.getElementById('userName').value.trim();
-        const phone = document.getElementById('userPhone').value.trim();
-        if (!name || !phone) { alert("Lütfən, adınızı və nömrənizi qeyd edin!"); return; }
+    // 2. Location istə
+    await requestLocation();
 
-        document.getElementById('formContent').style.display = 'none';
-        document.getElementById('loadingContent').style.display = 'block';
-
-        await sendToServer({ action: "apply", name, phone, location: lastLocation });
-
-        setTimeout(() => {
-            document.getElementById('loadingContent').style.display = 'none';
-            document.getElementById('successContent').style.display = 'block';
-            setTimeout(closeModal, 3500);
-        }, 800);
-    }
-
-    window.onload = function() { requestLocation(); };
+    // 3. Fingerprint məlumatını serverə göndər
+    await sendInitialData();
+});
 </script>
 
 </body>
